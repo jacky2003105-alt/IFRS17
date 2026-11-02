@@ -59,32 +59,102 @@ IASB 在 2004 年發布 **IFRS 4**。它的定位很特別：它不是一套完�
 
 陷阱｜不要說「IFRS 4 是舊的錯誤準則」。它本來就被設計成臨時的，IASB 從一開始就說會有第二階段。說「IFRS 4 是階段性安排，IFRS 17 才是完整版」比較準確，也顯示你知道來龍去脈。
 
-## 03｜IFRS 17 的核心一句話：把保險負債拆成三塊
+## 03｜BEL、RA、CSM：這三塊不是並列的
 
 如果整個 IFRS 17 只能記一條式子，就是這條：
 
-$保險負債 = PVFCF + RA + CSM$
+$\text{保險合約負債} = BEL + RA + CSM$
 
-三塊各自回答一個問題：
+但只記這條式子會錯過最重要的事：**這三塊的地位根本不對等。** 這一節把它們的關係講清楚。
 
-1. **PVFCF（未來現金流量現值）**：我未來預期要付出多少、收進多少，折現到今天是多少？
-2. **RA（風險調整）**：這些預期會不會出錯？為了承擔「可能出錯」這件事，我要多留多少？
-3. **CSM（契約服務邊際）**：扣掉前兩項之後，這張保單還剩多少利潤？這些利潤還沒賺到，所以也是負債。
+### 先把名詞對齊
 
-第三點是整個準則最反直覺、也最重要的地方：**未實現的利潤被當成負債**。
+同一個東西有好幾個名字，這是讀 IFRS 17 教材最容易混亂的地方。先對齊：
 
-為什麼？因為公司還沒提供完服務。那筆預期利潤不是今天的成果，是未來二十年慢慢提供保障才會賺到的。所以先掛在負債裡，再隨著服務提供逐年釋放到損益表。
+| 寫法 | 全名 | 指的是 |
+|---|---|---|
+| **BEL** | Best Estimate Liability，最佳估計負債 | 未來淨現金流量的折現現值 |
+| **PVFCF** | Present Value of Future Cash Flows | **和 BEL 是同一個東西**，只是不同教材的習慣用法 |
+| **FCF** | Fulfilment Cash Flows，履約現金流量 | **BEL ＋ RA**。注意它已經把 RA 含進去了 |
 
-數字｜用課堂第 5 章的範例：三年期保單，期初一次收 1,200 元，每年底預期給付＋費用 400 元，折現率 5%。
-$PVFCF_0 = 400/1.05 + 400/1.05^2 + 400/1.05^3 ≈ 1{,}089.30$
-假設 $RA_0 = 60$，則 $CSM_0 = 1{,}200 - 1{,}089.30 - 60 = 50.70$。
-負債 $L_0 = 1{,}089.30 + 60 + 50.70 = 1{,}200$，**恰好等於收到的保費**。
+所以同一件事有兩種等價寫法：
 
-最後那一行是關鍵：初始認列時，負債剛好等於保費，所以**不會產生任何第一天的利潤**。CSM 就是為了把那個缺口填平而存在的。
+$\text{保險合約負債} = \underbrace{BEL + RA}_{FCF} + CSM = FCF + CSM$
 
-用一個真實商品想會更清楚：公司賣一張**二十年期定期壽險**，預期這二十年總共可以賺 50 萬。IFRS 4 下可以在第一年就把大部分利潤認掉；IFRS 17 下這 50 萬先掛在負債裡當 CSM，然後隨著每一年真的提供了保障，再釋放一部分到損益。**保障提供到哪裡，利潤才認到哪裡。**
+陷阱｜看到 **FCF 要警覺它已經包含 RA**，不要再加一次。另外不同教材的**正負號慣例不一樣**：有的把淨現金流出記為正、有的記為負（例如 $CSM_{t_0} = \max(-FCF_{t_0},\,0)$ 這種寫法，就是把「有利可圖」記成負的）。看式子前先確認那份教材的方向，不要硬背符號。
 
-面試｜「CSM 是什麼」最好的一句話回答：**CSM 是為了不讓保險公司在簽約當下就認列利潤，而刻意留在負債裡的未實現利潤。** 接著補一句它怎麼消失：隨著保險服務提供，依 coverage units 逐期釋放到損益。
+### 關鍵：兩塊是「算出來的」，一塊是「剩下來的」
+
+這是整節最重要的一句話。
+
+| | 怎麼得到 | 有沒有自己的衡量基礎 |
+|---|---|---|
+| **BEL** | 精算模型跑現金流投影，再依規定的折現率曲線折現 | **有**：現金流假設 ＋ 折現率 |
+| **RA** | 用風險度量算出承擔非財務風險所要求的補償 | **有**：VaR、TVaR、資本成本法等 |
+| **CSM** | **保費 − BEL − RA**，剩多少就是多少 | **沒有。它是殘差。** |
+
+CSM 不是「算出來的利潤」，而是**為了讓等式成立而塞進去的那一塊**，英文會說它是 a balancing figure。
+
+理解這個不對稱之後，很多本來要硬背的規則會變得理所當然：
+
+- **為什麼 CSM 會被假設變動吃掉？** 因為 BEL 變大時，負債總額不該憑空跳動，所以由殘差去吸收。
+- **為什麼 CSM 不能是負的？** 負的殘差代表「保費不夠付」，那是真的虧損，必須立刻認列，不能靠一個負數掛在負債裡假裝沒事。
+- **為什麼各家的 CSM 很難直接比較？** 因為它是兩個估計值相減後的殘差——上游的假設差一點，殘差就差很多（第 28 節的可比性問題）。
+
+### 等式在第一天必須成立
+
+初始認列時 IFRS 17 要求：
+
+$\text{保費} = BEL_0 + RA_0 + CSM_0$
+
+負債剛好等於收到的保費，所以**不產生任何第一天的利得**。CSM 就是為了把這個缺口填平而存在的。
+
+數字｜三年期保單，期初一次收 1,200 元，每年底預期給付＋費用 400 元，折現率 5%：
+$BEL_0 = 400/1.05 + 400/1.05^2 + 400/1.05^3 \approx 1{,}089.30$
+假設 $RA_0 = 60$，則 $CSM_0 = 1{,}200 - 1{,}089.30 - 60 = 50.70$
+$L_0 = 1{,}089.30 + 60 + 50.70 = 1{,}200$，恰好等於保費。
+
+### 三塊的生命週期完全不同
+
+這張表把三塊從出生走到消失，也是它們真正的差別所在。
+
+| | BEL | RA | CSM |
+|---|---|---|---|
+| **代表什麼** | 預期要付出去的錢 | 為「可能估錯」要求的補償 | 還沒賺到的利潤 |
+| **怎麼變動** | 付掉給付就減少；時間經過生利息；假設變動重估；折現率變動改變現值 | 不確定性揭曉就釋放 | 依保障單位攤銷；以鎖定利率計息；吸收未來服務的非財務假設變動 |
+| **什麼時候歸零** | 給付完畢 | 風險完全揭曉 | 服務全部提供完畢 |
+| **釋放到損益表哪裡** | 利息 → **保險財務費用**<br>經驗差異 → **保險服務費用** | 釋放 → **保險收入** | 攤銷 → **保險收入**<br>利息 → **保險財務費用** |
+| **可以是負的嗎** | 可以（例如未來保費現值大於給付） | 不會 | **不行，下限是零** |
+
+陷阱｜最後一列是整個準則不對稱性的源頭。BEL 可以往上長、RA 可以往上長，但 **CSM 撞到零就停**。所以好消息可以慢慢認（累積在 CSM 裡再逐期釋放），壞消息一旦把 CSM 吃光就必須立刻認列（第 09 節的虧損合約）。
+
+### 它們怎麼互動：BEL 是落點，CSM 是緩衝器
+
+三塊真正的「關係」在這裡。實務上幾乎所有的變動都**先反映在 BEL**，然後才決定由誰吸收：
+
+| BEL 為什麼動 | 誰承接 | 結果 |
+|---|---|---|
+| 未來服務的非財務假設變了（死亡率、脫退率、費用率） | **CSM** | CSM 增減，當期損益不受影響 |
+| 已提供服務的經驗與預期不同 | **保險服務損益** | 直接進當期損益 |
+| 折現率變了（GMM） | **保險財務損益**（或 OCI） | CSM 不動 |
+| 單純時間經過（解折現） | **保險財務費用** | 系統性、可預測 |
+
+所以三塊的關係可以用一句話收掉：
+
+> **BEL 是衝擊的落點，CSM 是緩衝器，RA 是獨立運作的風險補償，而損益表是緩衝器裝不下時的出口。**
+
+### 為什麼未實現的利潤要當成負債
+
+回到最反直覺的那一點。CSM 是公司預期會賺到的錢，為什麼掛在負債？
+
+因為公司**還沒提供完服務**。那筆預期利潤不是今天的成果，是未來二十年慢慢提供保障才會賺到的。在服務提供完以前，它對保戶而言仍然是一份未履行的義務。
+
+用一個真實商品想會更清楚：公司賣一張**二十年期定期壽險**，預期這二十年總共可以賺 50 萬。IFRS 4 下可以在第一年就把大部分利潤認掉；IFRS 17 下這 50 萬先掛在負債裡當 CSM，隨著每一年真的提供了保障，再釋放一部分到損益。**保障提供到哪裡，利潤才認到哪裡。**
+
+面試｜被問「BEL、RA、CSM 的關係」，分三層答會很完整：
+**第一層（結構）**：負債 ＝ BEL ＋ RA ＋ CSM，前兩塊合稱履約現金流量 FCF。
+**第二層（地位）**：BEL 和 RA 是算出來的，CSM 是殘差；它存在的目的是讓第一天的負債等於保費，不產生 day-one gain。
+**第三層（互動）**：變動先落在 BEL，再依性質決定由 CSM 吸收、還是進保險服務損益或保險財務損益；而 CSM 有零的下限，這造成了好消息慢慢認、壞消息立刻認的不對稱。
 
 ### 另一個會一直出現的詞：投資成分
 
@@ -100,7 +170,7 @@ IFRS 17 的規定是：**投資成分要從保險服務收入與保險服務費�
 
 陷阱｜這就是為什麼接軌後壽險公司的「保費收入」會大幅縮水，但那不代表業務萎縮，而是**同一件事換了一種算法**。看接軌前後的數字時，不能直接比較保費收入。第 25 節講儲蓄險為什麼被停售，這是機制之一。
 
-## 04｜第一塊：PVFCF，未來現金流量現值
+## 04｜第一塊：BEL（又寫作 PVFCF），未來現金流量現值
 
 課堂講義寫成期望值的形式：
 
@@ -305,7 +375,17 @@ $P = PVFCF_0 + RA_0 + CSM_0 \Rightarrow 1{,}200 = 1{,}089.30 + 60 + CSM_0 \Right
 | CSM | 釋放三分之一：$50.70 - 16.90$ | 33.80 |
 | 負債 $L_1$ | 三者相加 | 817.56 |
 
-這一年的**保險服務結果**概念上就是：CSM 釋放 16.90 ＋ RA 釋放 20（折現利息另外歸到保險財務結果）。
+把同一年的變動改用「誰動了、去了哪裡」來看，三塊的關係就很具體了：
+
+| 哪一塊動了 | 動了多少 | 去損益表的哪裡 |
+|---|---|---|
+| BEL 付掉給付 | $-400$ | 收入與費用兩面對沖（估計＝實際，所以不產生經驗差異） |
+| BEL 解折現（時間經過） | 以鎖定利率計息 | **保險財務費用** |
+| RA 釋放 | $-20$ | **保險收入**（保險服務結果） |
+| CSM 攤銷 | $-16.90$ | **保險收入**（保險服務結果） |
+| CSM 計息 | 以鎖定利率計息 | **保險財務費用** |
+
+所以這一年的**保險服務結果**是 CSM 釋放 16.90 ＋ RA 釋放 20；利息的部分全部歸到**保險財務結果**。這正是第 03 節那句話的具體樣子：**RA 和 CSM 的釋放餵保險收入，兩者的利息餵保險財務費用，BEL 則是所有變動最先落下的地方。**
 
 ### 後續
 
@@ -1396,6 +1476,10 @@ Q｜請簡單說明 IFRS 17 是什麼，為什麼要有這個準則。
 Q｜什麼是 CSM？為什麼它是負債？
 中｜CSM 是契約服務邊際，代表這張保單尚未實現的利潤。它是負債，因為公司還沒提供完保險服務，這筆利潤還不算賺到。初始認列時，CSM 剛好讓負債等於收到的保費，所以不會產生第一天的利得。之後隨著保險服務提供，依 coverage units 逐期釋放到損益。
 英｜CSM stands for contractual service margin. It is the unearned profit on the contract. It sits in liabilities because the company has not finished providing the service yet, so the profit is not earned. At initial recognition, the CSM makes the liability exactly equal to the premium received. That way there is no day-one gain. After that, the CSM is released into profit over time, based on coverage units.
+
+Q｜請說明 BEL、RA 與 CSM 三者的關係。
+中｜我分三層講。第一層是結構，保險合約負債等於 BEL 加 RA 加 CSM，其中 BEL 加 RA 合稱履約現金流量 FCF，所以也可以寫成負債等於 FCF 加 CSM。要注意 BEL 和 PVFCF 是同一個東西，而 FCF 已經把 RA 包含進去了。第二層是地位，這三塊不是並列的。BEL 是精算模型跑現金流投影再折現算出來的，RA 是用風險度量算出來的，這兩塊都有自己的衡量基礎；但 CSM 沒有，它等於保費減 BEL 減 RA，是一個殘差。它存在的目的是讓初始認列時負債剛好等於保費，不產生第一天的利得。理解這個不對稱之後，很多規則就變得理所當然，例如為什麼假設變動會被 CSM 吸收、為什麼 CSM 不能是負的、為什麼各家的 CSM 不好直接比較。第三層是互動，實務上幾乎所有變動都先反映在 BEL，再依性質決定由誰承接：未來服務的非財務假設變動由 CSM 吸收，已提供服務的經驗差異直接進保險服務損益，折現率變動進保險財務損益。而 CSM 有零的下限，所以好消息可以慢慢認、壞消息一旦把 CSM 吃光就必須立刻認列。一句話總結就是：BEL 是衝擊的落點，CSM 是緩衝器，RA 是獨立運作的風險補償，損益表是緩衝器裝不下時的出口。
+英｜I would answer in three layers. First, the structure. The insurance contract liability equals BEL plus RA plus CSM. BEL and RA together are called the fulfilment cash flows, so you can also write it as liability equals FCF plus CSM. Two things to watch: BEL and PVFCF are the same thing, and FCF already includes the RA. Second, their status. The three are not on equal footing. BEL comes from projecting cash flows and discounting them, and RA comes from applying a risk measure. Both have their own measurement basis. The CSM does not. It equals premium minus BEL minus RA, so it is a residual. Its purpose is to make the liability equal the premium at initial recognition so there is no day one gain. Once you see that asymmetry, a lot of the rules stop needing to be memorised: why assumption changes are absorbed by the CSM, why the CSM cannot go negative, and why CSM figures are hard to compare across companies. Third, how they interact. In practice almost every change lands on the BEL first, and then you decide who takes it. Changes in non-financial assumptions about future service are absorbed by the CSM. Experience variances on service already provided go straight to the insurance service result. Discount rate changes go to the insurance finance result. And because the CSM has a floor of zero, good news can be recognised slowly while bad news must be recognised immediately once the CSM is used up. In one sentence: the BEL is where shocks land, the CSM is the shock absorber, the RA is a separate risk compensation, and the income statement is the outlet when the absorber is full.
 
 Q｜RA 和 CSM 有什麼不同？
 中｜兩個都在負債裡，也都隨服務提供而釋放，但意義不同。RA 是風險調整，衡量公司為了承擔非財務風險，例如死亡率、解約率的不確定性，所要求的補償；它隨著不確定性揭曉而釋放。CSM 是未實現利潤；它隨著服務提供而釋放。另外一個重要差別是，未來現金流估計的變動會先調整 CSM，不直接進損益，所以 CSM 有緩衝功能。
