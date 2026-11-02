@@ -1,0 +1,1026 @@
+# IFRS 17 與 TW-ICS：從頭理解，到面試講得出來
+
+兩條線：左邊是「制度在做什麼」，從一張保單的負債怎麼算開始；右邊是「2026 年台灣實際發生什麼事」。最後是中英對照的面試題庫。
+
+## 01｜先看問題：保險公司的財報為什麼特別難做
+
+一般公司賣東西，收錢、交貨、認列收入，三件事幾乎同時發生。保險公司不是。
+
+一張二十年期的壽險保單，公司**今天收保費**，但**未來二十年**才陸續提供服務、支付理賠。所以財報上必須回答一個很難的問題：
+
+> 今天收到的這筆錢，有多少是「已經賺到的」，有多少是「還欠客戶的」？
+
+這個問題拆開來看，有三個麻煩。
+
+### 麻煩一：利潤要算在哪一年
+
+假設一張保單公司預期總共可以賺 50 元。如果簽約當下就把 50 元全部認列為利潤，第一年的財報會非常好看，後面十九年卻只剩成本。這叫**初始認列即時利得**（day-one gain），會讓業績看起來像在賣保單換獲利，而不是靠提供保險服務賺錢。
+
+### 麻煩二：負債要用什麼利率折現
+
+未來二十年的理賠要折現回今天。用哪一個利率？
+
+- 用**發單當時鎖定的利率**（lock-in）：數字穩定，但和現在的市場完全脫節。
+- 用**現在的市場利率**（current rate）：反映現實，但利率一動，負債就跟著跳。
+
+### 麻煩三：資產和負債用不同尺規衡量
+
+這是最致命的一個。保險公司的資產（債券、股票）早就依 IFRS 9 用**公允價值**衡量；但在舊制下，保險負債還停在**鎖定利率**。
+
+陷阱｜資產看今天的市價，負債看二十年前的利率。兩邊尺規不同，中間的差就全部掉進淨值。第 16 節會看到 2022 年這件事造成多大的災難。
+
+面試｜被問到「IFRS 17 在解決什麼問題」時，不要背定義。直接講這三個麻煩，然後說 IFRS 17 的三塊負債結構就是分別對應它們：CSM 管利潤認列時點、折現率管時間價值、OCI option 管資產負債的衡量落差。
+
+## 02｜IFRS 4 是什麼、為什麼擋不住問題
+
+IASB 在 2004 年發布 **IFRS 4**。它的定位很特別：它不是一套完整的保險會計準則，而是一個**過渡性安排**。
+
+法規｜IFRS 4 允許各國保險公司「暫時沿用既有的本地會計制度」，只要求最低限度的揭露。它的主要目的是讓保險公司在國際準則下先有個暫行依據。
+
+這造成兩個後果。
+
+**第一，國際間完全無法比較。** 同一張保單，在不同國家可以用完全不同的方式衡量負債、認列利潤。投資人看兩家跨國保險公司的財報，根本不知道差異是來自經營績效還是會計方法。
+
+**第二，台灣這邊的具體後果是「準備金用鎖定利率」。** 保單發單時用什麼預定利率，準備金就一直用那個利率折現，不隨市場變動。
+
+這兩套制度的差別可以整理成一張表。
+
+| 項目 | IFRS 4 | IFRS 17 |
+|---|---|---|
+| 性質 | 允許各國沿用既有制度 | 統一的全球保險合約會計準則 |
+| 衡量基礎 | 歷史成本或本地制度 | 現時價值（現金流現值 ＋ 風險調整 ＋ CSM） |
+| 評價假設 | 可依公司自訂 | 以市場一致假設估計履約現金流 |
+| 利率折現 | 可用固定或歷史利率 | 反映當期市場利率 |
+| 利潤認列 | 可於簽約當下一次認列 | 透過 CSM 於保險期間逐期釋放 |
+| 收入認列 | 保費收入按收付基礎入帳 | 保險服務收入依履約義務完成進度認列 |
+| 投資組合影響 | 會計分類不一致、盈餘波動 | 可選 OCI 減少損益波動 |
+| 揭露 | 相對寬鬆 | 詳細揭露假設、敏感度、CSM 變化表 |
+| 監理搭配 | 以 RBC 為主 | 與 TW-ICS 接軌 |
+
+陷阱｜不要說「IFRS 4 是舊的錯誤準則」。它本來就被設計成臨時的，IASB 從一開始就說會有第二階段。說「IFRS 4 是階段性安排，IFRS 17 才是完整版」比較準確，也顯示你知道來龍去脈。
+
+## 03｜IFRS 17 的核心一句話：把保險負債拆成三塊
+
+如果整個 IFRS 17 只能記一條式子，就是這條：
+
+$保險負債 = PVFCF + RA + CSM$
+
+三塊各自回答一個問題：
+
+1. **PVFCF（未來現金流量現值）**：我未來預期要付出多少、收進多少，折現到今天是多少？
+2. **RA（風險調整）**：這些預期會不會出錯？為了承擔「可能出錯」這件事，我要多留多少？
+3. **CSM（契約服務邊際）**：扣掉前兩項之後，這張保單還剩多少利潤？這些利潤還沒賺到，所以也是負債。
+
+第三點是整個準則最反直覺、也最重要的地方：**未實現的利潤被當成負債**。
+
+為什麼？因為公司還沒提供完服務。那筆預期利潤不是今天的成果，是未來二十年慢慢提供保障才會賺到的。所以先掛在負債裡，再隨著服務提供逐年釋放到損益表。
+
+數字｜用課堂第 5 章的範例：三年期保單，期初一次收 1,200 元，每年底預期給付＋費用 400 元，折現率 5%。
+$PVFCF_0 = 400/1.05 + 400/1.05^2 + 400/1.05^3 ≈ 1{,}089.30$
+假設 $RA_0 = 60$，則 $CSM_0 = 1{,}200 - 1{,}089.30 - 60 = 50.70$。
+負債 $L_0 = 1{,}089.30 + 60 + 50.70 = 1{,}200$，**恰好等於收到的保費**。
+
+最後那一行是關鍵：初始認列時，負債剛好等於保費，所以**不會產生任何第一天的利潤**。CSM 就是為了把那個缺口填平而存在的。
+
+面試｜「CSM 是什麼」最好的一句話回答：**CSM 是為了不讓保險公司在簽約當下就認列利潤，而刻意留在負債裡的未實現利潤。** 接著補一句它怎麼消失：隨著保險服務提供，依 coverage units 逐期釋放到損益。
+
+## 04｜第一塊：PVFCF，未來現金流量現值
+
+課堂講義寫成期望值的形式：
+
+$PVFCF_t = E_t\left[\sum_{k=t}^{T} CF_k \cdot \exp\left(-\int_t^k r_s\, ds\right)\right]$
+
+拆開來看只有三件事：
+
+- $CF_k$ 是第 $k$ 期的**淨現金流**：保費收入進來，給付支出、保單相關費用出去。
+- 指數那一項是**折現因子**，$r_s$ 是折現率。
+- 外面的 $E_t$ 表示這是**期望值**——未來給付多少取決於死亡率、解約率，是隨機的。
+
+IFRS 17 對這一塊有三個要求，每一個都有理由。
+
+### 必須是「履約現金流」
+
+英文是 **fulfilment cash flows**。只計入「履行這份保險合約會發生」的現金流，公司的總部租金、不相關的行政成本不能算進去。
+
+### 必須用市場一致的假設
+
+財務面的假設（利率、匯率）要和市場觀察到的價格一致，不能用公司自己偏好的數字。非財務面的假設（死亡率、解約率）則用公司自己的最佳估計。
+
+### 必須隨時更新
+
+這是和 IFRS 4 最大的不同。每一期重新估計，而不是鎖死在發單那天。
+
+數字｜同一個範例，第一年末重估：已經付掉 400 元、剩兩年的現金流，
+$PVFCF_1 = 400/1.05 + 400/1.05^2 ≈ 743.76$。
+從 1,089.30 降到 743.76，差額就是「這一年提供了服務、付掉了給付」。
+
+## 05｜第二塊：RA，風險調整
+
+RA 的全名是 **Risk Adjustment for non-financial risk**，最後那四個字很重要：**非財務風險**。
+
+利率風險、匯率風險不算在 RA 裡（那些由折現率與資產端處理）。RA 管的是死亡率、傷病率、解約率這類**保險本身的不確定性**。
+
+### 定義的方式
+
+課堂講義給了兩種寫法。概念上：
+
+$RA_t = \rho(PVFCF_t) - E[PVFCF_t]$
+
+其中 $\rho(\cdot)$ 是一個風險度量（risk measure），實務上可用 VaR 或 TVaR——這裡和你風險管理課學的分位數、尾端平均是同一套東西。
+
+簡化模型下直接用標準差：
+
+$RA = k \times SD(X)$
+
+$k$ 是風險容忍度係數，通常落在 5%–15%，由公司或監理機關設定。
+
+數字｜課堂第 4 章的三年期定期壽險：$x = 40$、$i = 3\%$、$q_{40}=0.002$、$q_{41}=0.003$、$q_{42}=0.004$、死亡給付 1,000。
+折現後死亡給付現值 $B = 8.4062$，標準差 $SD(X) = 88.3621$，取 $k = 10\%$：
+$RA = 0.1 \times 88.3621 = 8.8362$。
+
+### RA 怎麼消失
+
+隨著保險期間經過，不確定性逐步揭曉，RA 就**逐期釋放到損益**。課堂範例假設風險均勻，三年期就每年釋放三分之一：$60 \to 40 \to 20 \to 0$。
+
+陷阱｜RA 不是「保守一點多留的準備金」，它有明確的經濟意義：**公司為了承擔非財務風險的不確定性，所要求的最低補償**。而且它的釋放會進損益，是保險服務結果的一部分。
+
+面試｜如果面試官問 RA 和 CSM 哪個先用掉，答案是：兩個都隨服務提供而釋放，但**RA 釋放的是「風險消退」，CSM 釋放的是「利潤實現」**，意義不同。另外，若未來現金流的估計變好，調整會先進 CSM，不會直接進損益——這是 CSM 的「緩衝」功能。
+
+## 06｜第三塊：CSM，契約服務邊際
+
+初始認列時：
+
+$CSM_0 = PVFP_0 - PVFCF_0 - RA_0$
+
+其中 $PVFP_0$ 是保費現值（課堂講義寫成預期利潤現值的來源）。用課堂第 4 章的符號系統更貼近精算數學的寫法：
+
+$FCF_{t_0} = PV_{t_0}[未來現金流] + RA_{t_0}$
+$CSM_{t_0} = \max(-FCF_{t_0},\, 0)$
+$LC_{t_0} = \max(FCF_{t_0},\, 0)$
+
+讀法：
+
+- 若 $FCF_{t_0} < 0$（保費現值大於給付＋風險調整，**有利可圖**），絕對值就形成 CSM。
+- 若 $FCF_{t_0} > 0$（**虧損組合**），$CSM_{t_0} = 0$，並認列損失成分 $LC_{t_0}$ 到當期損益。
+
+第二種情況就是第 08 節的**虧損合約**（onerous contract）。
+
+### CSM 的三種變動
+
+CSM 不是算一次就定了，它每期會動：
+
+1. **依 coverage units 攤銷**：提供了多少服務，就釋放多少利潤到損益。
+2. **吸收未來現金流估計的變動**：假設變好或變差，先調整 CSM，不直接進損益。
+3. **計息**：以初始認列的折現率滾利。
+
+第 2 點是 CSM 最被低估的功能。它是一個**利潤緩衝池**：只要調整幅度沒有把 CSM 吃光，損益表就不會跳動。
+
+數字｜課堂範例，三年期、coverage units 均勻分配，$CSM_0 = 50.70$：
+每年釋放 $\frac{1}{3} \times 50.70 \approx 16.90$，所以 $CSM_1 = 50.70 - 16.90 = 33.80$。
+
+面試｜CSM 是 2026 年之後台灣壽險業最常被提到的詞，因為它同時是三件事：
+（1）**負債的一部分**；
+（2）**未來獲利的存量**——CSM 餘額越大，未來可釋放的利潤越多；
+（3）**新契約價值的指標**——新契約 CSM 就是這張新保單預期能賺多少。
+第 23 節有 2026 年各家壽險的實際 CSM 數字，面試時講得出數字會差很多。
+
+## 07｜把三塊接起來：一張保單走三年
+
+這一節把前三節合在一起走一遍，用的是課堂第 5 章的簡化範例。數字刻意弄得很乾淨，重點是看三塊怎麼同時變動。
+
+**設定**：三年期保單，期初一次收保費 1,200 元；每年底預期「給付＋費用」各 400 元；折現率鎖定 5%；期初 RA = 60；風險與保障水準每年相同，所以 coverage units 三年平均分配。
+
+### 期初（$t = 0$）
+
+$PVFCF_0 = \frac{400}{1.05} + \frac{400}{1.05^2} + \frac{400}{1.05^3} \approx 380.95 + 362.81 + 345.54 = 1{,}089.30$
+
+為了不產生第一天的利潤，CSM 必須讓負債剛好等於保費：
+
+$P = PVFCF_0 + RA_0 + CSM_0 \Rightarrow 1{,}200 = 1{,}089.30 + 60 + CSM_0 \Rightarrow CSM_0 = 50.70$
+
+### 第一年末（$t = 1$），假設實際經驗與預期相同
+
+| 項目 | 怎麼算 | 結果 |
+|---|---|---|
+| PVFCF | 剩兩年：$400/1.05 + 400/1.05^2$ | 743.76 |
+| RA | 釋放三分之一：$60 - 20$ | 40 |
+| CSM | 釋放三分之一：$50.70 - 16.90$ | 33.80 |
+| 負債 $L_1$ | 三者相加 | 817.56 |
+
+這一年的**保險服務結果**概念上就是：CSM 釋放 16.90 ＋ RA 釋放 20（折現利息另外歸到保險財務結果）。
+
+### 後續
+
+| 期末 | PVFCF | RA | CSM | 負債 |
+|---|---|---|---|---|
+| 0 | 1,089.30 | 60 | 50.70 | 1,200.00 |
+| 1 | 743.76 | 40 | 33.80 | 817.56 |
+| 2 | 380.95 | 20 | 16.90 | 417.85 |
+| 3 | 0 | 0 | 0 | 0 |
+
+服務全部提供完畢，負債歸零。
+
+面試｜這個表可以整張畫在白板上。它一次展示了 IFRS 17 的全部精神：**利潤不在第一天出現，而是三年平均流出來；負債隨服務提供而遞減；最後歸零。** 能把這張表畫出來並解釋每一欄，勝過背十條定義。
+
+## 08｜LRC 與 LIC：保險負債的另一種切法
+
+前面是把負債**縱向**切成三塊（PVFCF／RA／CSM）。IFRS 17 還有一個**橫向**的切法，依服務有沒有提供完畢來分：
+
+- **LRC（Liability for Remaining Coverage，剩餘保障負債）**：尚未提供保險服務的部分。
+- **LIC（Liability for Incurred Claims，已發生理賠負債）**：已經發生、但還沒理賠完畢的部分。
+
+本節的三塊結構講的其實是 LRC：
+
+$LRC_t = FCF_t + CSM_t$，其中 $FCF_t = PV(預期給付)_t + RA_t - PV(未來保費)_t$
+
+所以展開來是：
+
+$LRC_t = \big(PV(預期給付)_t - PV(未來保費)_t\big) + RA_t + CSM_t$
+
+LRC 的經濟意涵是「**尚未履行之保險服務的負債現值**」，每一期隨服務提供而遞減，方式有三種：
+
+- 釋放部分 CSM，反映利潤實現；
+- 攤銷部分 RA，反映風險暴露減少；
+- 依當期現金流與假設變動重新量測 FCF。
+
+### 動態更新式
+
+$LRC_{t+1} = LRC_t + 利息費用 + 當期保費收入 - 服務釋放 - 理賠給付$
+
+### 虧損合約（onerous contract）
+
+如果在初始認列或後續衡量時，預期未來理賠與費用的現值**大於**剩餘保險責任，這組合約就是虧損組合：
+
+$若\ CSM_t = 0\ 且\ FCF_t > 0 \Rightarrow 立即認列損失至損益，並形成\ LC_t$
+
+後續若有利的變動發生，**必須先沖回 $LC_t$**；只有當 $LC_t$ 全數沖回之後，剩餘的有利變動才可以增加 CSM。
+
+陷阱｜這是 IFRS 17 一個很不對稱的設計：**好消息先進 CSM（慢慢認列），壞消息直接進損益（立刻認列）。** 面試時點出這個不對稱性，會顯示你真的讀懂了，而不是背流程。它也直接解釋了第 22 節為什麼有些保單會被停售——一旦某類商品在新制下被判定為虧損組合，賣一張就要立刻認列一次損失。
+
+## 09｜三種衡量模式：GMM、PAA、VFA
+
+IFRS 17 對保險合約負債的評價主要分三種方式。選哪一種，取決於合約期間長短、現金流是否可合理估計、以及是否具有直接參與特性。
+
+| 衡量方式 | 適用契約類型 | 是否需 CSM | 複雜度 | 主要特點 |
+|---|---|---|---|---|
+| GMM／BBA | 長期壽險、一般保險 | 是 | 高 | PVFCF、RA 與 CSM 三構面 |
+| PAA | 一年期以內短期保單 | 多數情況否 | 低 | 類似 UPR 的簡化模型 |
+| VFA | 直接參與／投資型保單 | 是 | 中高 | CSM 隨資產池價值變動 |
+
+### GMM（General Measurement Model），又稱 BBA（Building Block Approach）
+
+就是第 03 到第 07 節講的那一套，是 IFRS 17 的**核心模型**，適用多數長期壽險與一般保險合約。
+
+### PAA（Premium Allocation Approach，保費分攤法）
+
+適用條件有兩個：合約期間通常在**一年以內**；合約不具重大融資成分。
+
+它的精神類似 IFRS 4 下的**未到期責任**（unearned premium reserve, UPR）：以「仍未提供保險服務對應的保費」作為負債基礎。最簡化的情況下，
+
+$UPR_t = P\left(1 - \frac{t}{T}\right)$
+
+數字｜課堂範例：一年期火險，一次收保費 1,200 元，合約取得成本（佣金）120 元。
+期初：$LRC_0^{premium} = 1{,}200$、$DAC_0 = 120$，淨負債 $= 1{,}080$。
+三個月後：已賺得保費 $1{,}200 \times \frac{3}{12} = 300$，攤銷取得成本 $120 \times \frac{3}{12} = 30$。
+$LRC_3^{premium} = 900$、$DAC_3 = 90$，淨負債 $= 810$。
+對照傳統 UPR：$1{,}200 \times \frac{9}{12} = 900$，減未攤銷取得成本 90，同樣是 810。**兩者一致。**
+
+但 PAA 仍須做虧損合約測試。承上例，若在 $t=3$ 重估剩餘九個月的預期索賠與費用現值為 830，而淨 LRC 只有 810：
+
+$Onerous\ Loss = 830 - 810 = 20$
+
+就要額外認列 20 的負債並立即進損益。
+
+### VFA（Variable Fee Approach，可變費用法）
+
+適用於具有**直接參與特性**（direct participating features）的合約：分紅保單、投資連結保單、給付高度連結特定資產池表現的保單。
+
+核心概念：保險人對標的資產池（underlying items）的報酬收取一筆「**可變費用**」，這筆費用就是提供服務所獲的對價。
+
+$Variable\ Fee_t = \alpha \cdot Return_{assets,t}$
+
+數字｜課堂範例：保戶投入 1,000 元全數投資於資產池，約定保戶參與報酬 80%、公司分享 20%。
+會計估計時預期年報酬 4%：預期報酬 $= 40$，公司可變費用 $= 0.2 \times 40 = 8$。
+假設 $CSM_0 = 80$。實際報酬是 10%：實際報酬 $= 100$，公司可變費用 $= 0.2 \times 100 = 20$。
+可變費用變動 $\Delta = 20 - 8 = 12$。
+若當期依 coverage units 釋放 10 作為當期利潤，則
+$CSM_1 = 80 - 10 + 12 = 82$。
+
+讀法：即使已經就當期服務認列了 10 的利潤，但因為資產池實際報酬優於估計，**CSM 反而從 80 上升到 82**。
+
+面試｜VFA 的一句話：**在 VFA 下，標的資產池公允價值變動中屬於保險人分享的那一部分，會調整 CSM，而不是直接反映到當期損益。** 這讓分紅與投資型保單的會計更貼近它的經濟實質——公司賺的是管理費，不是資產本身的漲跌。
+
+## 10｜折現率與 OCI option：IFRS 17 最實用的一個選擇權
+
+IFRS 17 要求折現率必須反映三件事：貨幣時間價值；現金流的流動性特性；避免重複計入不可觀察風險（避免與 RA 重複）。
+
+但真正影響財報長相的，是另一個問題：**折現率變動造成的負債變動，要進損益還是進其他綜合損益？**
+
+IFRS 17 允許公司選擇（這就是所謂的 **OCI option**）：
+
+$PVFCF\ 變動 \to \begin{cases} OCI, & 若採用\ OCI\ option \\ P/L, & 否則 \end{cases}$
+
+三塊負債對損益的影響因此分工如下：
+
+| 構面 | 變動的性質 | 進到哪裡 |
+|---|---|---|
+| PVFCF | 折現率變動影響負債現值 | 可選 OCI 或 P/L |
+| RA | 風險消退 | 逐期釋放進 P/L |
+| CSM | 未實現利潤 | 依 coverage units 系統性攤銷進 P/L |
+
+所以 IFRS 17 對損益的關鍵就是一句話：**折現率變動是否進損益？** 這就是 OCI option 的重要性，也是第 11 節資產負債不匹配問題的解方之一。
+
+## 11｜IFRS 9 的三種分類，以及損益為什麼會不匹配
+
+IFRS 17 管負債，**IFRS 9 管資產**。兩者在 2026 年同時生效，壽險公司的損益波動就是這兩套制度互動出來的。
+
+### IFRS 9 的三種分類
+
+依兩個標準決定：**商業模式**（business model）與**合約現金流是否符合 SPPI**（solely payments of principal and interest）。
+
+| 分類 | 名稱 | 評價方式 | 公允價值變動去向 | 損益波動 |
+|---|---|---|---|---|
+| AC | 攤銷後成本 | 有效利率法 | 不進損益、不進 OCI（除減損） | 最低 |
+| FVOCI | 公允價值透過其他綜合損益 | 公允價值 | 進 OCI，不進損益；出售時 recycling | 中等 |
+| FVTPL | 公允價值透過損益 | 公允價值 | 全部進損益 | 最高 |
+
+數字｜課堂範例：債券面額 100、購買價 100、期末公允價值跌到 95、當期利息收入 3。
+AC：$P/L = +3$（不認列公允價值變動）。
+FVOCI：$P/L = +3$，$OCI = -5$。
+FVTPL：$P/L = 3 - 5 = -2$。
+同一張債券、同一年，損益可以是 $+3$ 或 $-2$，**差別完全來自分類**。
+
+### 把資產和負債放在一起：三種典型情境
+
+資產的公允價值變動與負債的公允價值變動，可能進到報表的**不同區塊**。若兩邊落在不同區塊（一邊 P/L、一邊 OCI），就會造成損益波動。
+
+數字｜課堂試算：利率上升 100 bps，假設資產債券公允價值 $-5\%$、IFRS 17 負債折現率上升使 PVFCF 減少 $-4\%$（對公司是好消息）。
+
+| 情境 | 資產分類 | 負債 OCI option | 損益 | OCI |
+|---|---|---|---|---|
+| A | FVTPL | 不採用 | $(-5\%) + (+4\%) = -1\%$ | — |
+| B | FVOCI | 採用 | $0$ | $(-5\%)+(+4\%) = -1\%$ |
+| C | AC | 採用 | $0$ | $-4\%$ |
+
+結論很清楚：
+
+1. IFRS 9 決定資產公允價值是否進損益：$AC < FVOCI < FVTPL$（損益波動度）。
+2. IFRS 17 決定負債折現率變動是否進損益：採 OCI option 則 P/L 穩定。
+3. 若資產與負債的公允價值分別進入 P/L 與 OCI，就造成損益不匹配。
+4. **最穩定的組合：資產 AC ＋ 負債採 OCI option。**
+5. **最不穩定的組合：資產 FVTPL ＋ 負債不採 OCI。**
+
+面試｜這是整份筆記最可能被問到計算的一段。記住三件事就夠：資產分類決定資產端去哪裡、OCI option 決定負債端去哪裡、**兩邊要去同一個地方才不會波動**。第 23 節台灣人壽接軌時「資產重分類影響淨值 122 億元」講的就是公司在調整這件事。
+
+## 12｜損益表長什麼樣：兩條線
+
+IFRS 17 把保險公司的損益拆成兩條互不混淆的線，這是財報最直觀的改變。
+
+### 保險服務結果（Insurance Service Result）
+
+| 收入 | 支出 |
+|---|---|
+| 預期理賠（不含投資組成部分） | 實際理賠（不含投資組成部分） |
+| 風險調整攤銷（RA） | 分攤至當期的取得成本 |
+| 已實現利潤（CSM 釋放） | 實際費用 |
+| 預期費用 | |
+
+差額就是**保險業務的損益**——這才是「賣保險賺不賺錢」。
+
+### 保險財務結果（Insurance Finance Result）
+
+| 收入 | 支出 |
+|---|---|
+| 投資損益 | 保險負債利息支出 |
+
+差額是**投資與利率的損益**。
+
+陷阱｜這個拆法的意義是：以前看壽險公司的獲利，分不出有多少來自保險本業、多少來自投資操作。IFRS 17 之後兩者分開，**保險服務結果才是本業**。第 23 節會看到 2026 年上半年台灣壽險業保險服務結果 1,082 億、財務結果 2,121 億——投資仍然是獲利主力，但現在至少看得出來了。
+
+## 13｜從 RBC 到 ICS：清償能力制度在做什麼
+
+IFRS 17 是**會計**準則，回答「財報怎麼編」。ICS 是**監理**制度，回答「資本夠不夠」。兩者不同，但必須配套，因為 ICS 的資本計算要以 IFRS 17 的資產負債為基礎。
+
+### ICS 是什麼
+
+**ICS（Insurance Capital Standard，保險資本標準）**是國際保險監理官協會（IAIS）發展的全球一致資本標準，目的是讓跨國保險集團的清償能力可以互相比較。台灣在地化後的版本稱為 **TW-ICS**。
+
+### 和 RBC 的三個差別
+
+| 項目 | RBC（舊制） | ICS（新制） |
+|---|---|---|
+| 資產負債衡量 | 負債以鎖定利率評價 | 資產與負債均以**現時利率／公允價值**衡量 |
+| 風險衡量方法 | 以參數乘上曝險部位 | **壓力情境法**：對資產負債同時施加壓力，看淨值掉多少 |
+| 風險涵蓋範圍 | 相對窄 | 擴大，納入長壽、脫退、費用、巨災等新興風險 |
+
+第二列是重點。RBC 是「拿一個係數乘以你的部位」，ICS 是「假設利率、股價、死亡率同時走到不利情境，算你的淨資產會掉多少，那個掉幅就是你要準備的資本」。這和你在風險管理課學的壓力測試、尾端風險是同一套思路。
+
+面試｜一句話版本：**IFRS 17 讓財報反映現時價值，ICS 讓資本要求也反映現時價值；兩者不同時上路，就會出現「資產負債用新尺規、資本用舊尺規」的矛盾，所以台灣選擇同一天接軌。**
+
+## 14｜TW-ICS 的分級與門檻：官方條文的數字
+
+這一節的數字全部來自金管會 2025 年 12 月 24 日發布的「保險業資本適足性管理辦法」修正（金管保財字第 11404948751 號），自 2026 年 1 月 1 日施行。面試如果問到門檻，這些是正確答案。
+
+法規｜修正後第 5 條將資本適足性分為**四級**，同時符合兩個等級時以**較低等級**為準。
+
+| 級別 | TW-ICS（2026/1/1 起） | 舊制 RBC |
+|---|---|---|
+| 資本適足 | 資本適足率 **100% 以上**，且最近二期淨值比率**至少一期 3% 以上** | 200% 以上，淨值條件同左 |
+| 資本不足 | 資本適足率 **50% 以上、未達 100%**；或最近二期淨值比率均未達 3% 且至少一期 2% 以上 | 150% 以上、未達 200% |
+| 資本顯著不足 | 資本適足率 **25% 以上、未達 50%**；或最近二期淨值比率均未達 2% 且至少一期 0% 以上 | 50% 以上、未達 150% |
+| 資本嚴重不足 | 資本適足率 **低於 25%**；或淨值低於零 | 低於 50%；或淨值低於零 |
+
+### 三個容易考的重點
+
+**第一，法定最低標準從 200% 變成 100%。** 這不是放鬆，是因為**分母換了**。ICS 的風險資本用壓力情境法計算，數值本身比 RBC 大得多，所以同一家公司在兩套制度下的比率不能直接比較。
+
+**第二，級距被刻意放寬。** 「資本不足」從 RBC 的 150%–200%（寬度 50 個百分點）變成 ICS 的 50%–100%（寬度 50 個百分點，但相對於 100% 的基準是一半）。官方的理由是：2026 年起資產與負債按公允價值及現時估計衡量，**資本適足率的波動會變大**，級距不放寬會讓公司因為市場短期波動就掉級。
+
+**第三，淨值比留下來了，而且門檻不變。** 仍然是 3%、2%、0% 三道線。淨值比的定義微調為「權益除以不含分離帳戶保險商品資產之資產總額」。
+
+陷阱｜最常見的錯誤是說「ICS 的標準比 RBC 鬆，因為從 200% 降到 100%」。正確說法是：**分子分母的定義都換了，兩個數字不可比；實質上 ICS 的資本要求比 RBC 嚴格許多，所以才需要 15 年的過渡措施。**
+
+另外，修正後新增第 8 條：保險業應建立**自我風險及清償能力評估機制**（概念上對應國際的 ORSA）。未依期限改善者，主管機關可額外提高風險資本，或限期提出資本重建計畫。
+
+## 15｜在地化、過渡措施與差異化管理
+
+如果直接套用國際版 ICS，台灣壽險業會因為長年期高保證利率保單的存量而大量不合格。所以金管會分階段公布**在地化及過渡性措施**。
+
+### 已公布的措施（依官方新聞稿）
+
+| 時間 | 措施 |
+|---|---|
+| 2023/7/25 | 市場風險——股票、不動產、公共建設之在地化及過渡性措施 |
+| 2023/11/23 | 利率風險及淨資產過渡性措施 |
+| 2024/4/16 | 第三階段：可贖回債納入適格資產（在地化）；**新興風險 15 年過渡措施**（過渡性） |
+
+法規｜15 年過渡措施的原文機制是：針對新興風險（包含長壽、脫退、費用及巨災風險等），訂定 **15 年自 0% 線性遞增至 100%** 的過渡性措施。
+
+讀法：這類風險的資本計提，第一年只要算 0%，之後每年加約 6.67 個百分點，到第 15 年（2040 年）才要求 100%。有報導把它比喻為「先借用資本，但須逐年強化資本以達到目標」。
+
+### 申請時程與家數
+
+- 2025/11/7 前函報選擇性過渡措施申請書
+- 2025/12/15 前檢附經董事會通過的申請報告
+- 核准者須於 2026/3/31 前，以 2026/1/1 財務報表重新提報
+
+數字｜截至 2025 年 11 月 11 日，共 **15 家壽險公司**申請過渡措施，據報導全數為本土壽險公司（全體壽險 21 家，其中本土 16 家）。多數公司申請三項：**利率風險、新興風險與淨資產過渡措施**。
+
+另有一道基準上限的設計：2025 年 6/30 或 9/30 資本適足率不低於 250% 者，實施日及過渡期間各年度的資本適足率基準上限為 125%；低於 250% 者，基準上限原則為該二日資本適足率的 50% 取高者。兩日均未達法定最低標準者，除檢具具體增資計畫及承諾書並經金管會同意外，不適用過渡措施。
+
+### 差異化管理措施：把監理誘因和 CSM 綁在一起
+
+這是台灣的設計，面試講出來會很加分。金管會依業者的**增資**與**新契約貢獻（CSM）**努力情形，給予兩類獎勵：
+
+**提高資產配置彈性**（在不增加國外投資額度的前提下）
+
+- 國外信用評等 BBB、BBB− 之次順位金融債券：投資限額提高 1% 或 6%，以申請 3 次為限
+- 國外信用評等 BBB、BBB− 之公司債：同上，以申請 3 次為限
+- 國外私募基金及對沖基金：投資限額提高 0.5%，以申請 6 次為限
+
+**降低風險係數**
+
+- 投資國外私募基金及對沖基金之風險係數得以 90% 計算，每次申請適用 5 年，無申請次數限制
+
+獎勵次數依累進增資金額計算：$累進增資金額 = T1U \times 100\% + T1L \times 90\% + T2 \times 80\%$
+
+**CSM 達成率獎勵**：達成率達 100% 可申請政策性公共建設風險係數獎勵；達 105% 另可申請股票風險係數獎勵。
+
+面試｜差異化管理是一個很好的觀察點：**監理機關把「多賣有 CSM 貢獻的保障型商品」直接變成資本上的好處。** 這解釋了為什麼 2026 年各家壽險都在拚保障型商品——不只是因為 IFRS 17 的會計，也因為 ICS 的誘因設計。
+
+## 16｜利率：為什麼 2022 年升息會讓壽險淨值崩掉
+
+這是你題目裡「最近因為利率對保險公司的影響」的核心。先把機制講清楚。
+
+### 機制：一邊跟著市場走，一邊不動
+
+2022 年美國聯準會強勢升息，債券殖利率大幅上升（有報導寫殖利率反彈逾 1 個百分點），債券價格下跌。壽險公司是債券的大買家，所以：
+
+- **資產面**：債券依 IFRS 9 以公允價值衡量 → 價格跌，資產帳面價值跟著跌。
+- **負債面**：保單準備金在 IFRS 4 下用**發單時鎖定的利率**（lock-in）→ 市場利率上升，準備金一動也不動。
+
+淨值 ＝ 資產 − 負債。資產跌、負債不動，淨值就直接被打掉。
+
+法規｜保險局當時的說明：依現行會計制度，資產面反映壽險業持有債券價格下跌，但負債面尚未以公允價值評價，所以無法完全反映升息對資產負債的影響。並指出若壽險業資產與負債均以公允價值衡量，利率上升對淨值屬**正向**影響。
+
+最後那句是關鍵，也是最容易被誤解的地方。
+
+### 經濟上，升息對壽險公司其實是好事
+
+壽險公司的負債存續期間通常**比資產長**（賣了很多二、三十年期保單，但買不到那麼長的債券）。這叫**存續期間缺口**（duration gap）。
+
+當利率上升：
+
+- 資產（較短存續期間）價格下跌 $x\%$
+- 負債（較長存續期間）現值下跌更多，$y\% > x\%$
+
+所以**真實的經濟淨值反而上升**。新收的保費也可以投到更高的殖利率，利差損壓力減輕。
+
+問題純粹出在**會計只認列了其中一邊**。
+
+### 2022 年的實際數字
+
+數字｜2022 年第一季（依工商時報、中時報導）：
+壽險業 3 月底手中金融資產價值較 2021 年 12 月底**少掉 2 兆 1,278 億元**。
+淨值項下金融資產出現 **1,603 億元**未實現損失；首季綜合損益為 **負 5,328 億元**（比 2020 年 3 月的負 4,818 億元更慘）。
+同期首季稅後獲利仍有 **1,091 億元**——**帳上在賺錢，淨值卻在崩**，這個反差就是會計不對稱最直白的證據。
+
+陷阱｜面試時千萬不要說「升息所以壽險公司虧錢」。正確的講法是：**升息對壽險公司的經濟實質是正面的，2022 年的淨值危機是會計衡量不一致造成的帳面現象，不是償付能力出問題。** 這個區分是整個 IFRS 17／ICS 改革的起點。
+
+## 17｜「以前也升息過，為什麼那時候沒事」
+
+這是你題目裡最有鑑別度的一問，也是很多人會卡住的地方。原因有四個，缺一不可。
+
+### 一、以前的資產不是用公允價值衡量的
+
+IFRS 9 在台灣是 2018 年才上路，取代 IAS 39。在那之前，保險公司持有的債券多半列在「**持有至到期**」或「**無活絡市場之債券投資**」，**以成本列帳**，市價跌了帳上也不動。
+
+所以 2004–2006 年那一輪美國升息（聯邦資金利率從 1% 升到 5.25%），壽險公司的資產面根本不會反映出來。**不是當時沒有損失，是當時的會計看不到。**
+
+### 二、升息的幅度和速度是四十年來最極端的
+
+2022 年聯準會一年內升息約 425 個基點，速度是 1980 年代以來最快。同樣是升息，從 0.25% 升到 4.5% 造成的債券價格跌幅，遠大於過去幾輪的溫和升息。
+
+而且起點是**接近零的利率**。債券的存續期間在低殖利率環境下更長，對利率變動更敏感——同樣升 1 個百分點，低利率時的跌幅比高利率時大。
+
+### 三、台灣壽險業的資產規模和海外曝險都變大了
+
+這二十年台灣壽險業資產規模膨脹到三十兆以上，其中很高比例投資在**美元計價債券**。所以美國升息對台灣壽險業的衝擊，遠比二十年前直接。
+
+### 四、2020 年新增的淨值比監理指標，讓帳面淨值第一次有了法律後果
+
+以前帳面淨值掉了就掉了，不直接觸發監理行動。淨值比被納入資本適足性分級之後（第 14 節那三道線：3%、2%、0%），**帳面淨值掉到門檻以下就會被認定為資本不足**，要被要求增資、限制盈餘分配。
+
+面試｜這四點可以濃縮成一句：**「以前也升息，但那時候資產用成本列帳、升息幅度溫和、海外曝險小，而且帳面淨值還不是監理指標。2022 年這四個條件同時反過來了。」** 這一句話答完，面試官基本上知道你是真的懂。
+
+## 18｜金管會當時怎麼救：資產重分類與特別盈餘公積
+
+2022 年 10 月，會計研究發展基金會於 10 月 7 日回覆參考指引，金管會於 10 月 11 日公布：在符合 IFRS 9 及該指引的前提下，壽險公司可將**其他綜合損益項下（FVOCI）的債券重分類到攤銷後成本（AC）**。
+
+重分類之後，那些債券的公允價值變動就不再進 OCI，淨值不再隨市價波動。
+
+### 附帶條件
+
+- 高階管理層與簽證會計師共同研判並留存佐證，並依法揭露
+- 分入 AC 的債券**每年處分不得逾 5%**
+- 接軌 IFRS 17 的強化財務方案須動態檢視
+- 該指引只針對壽險業，銀行與證券不適用
+
+數字｜共 **6 家**壽險採用：南山人壽、國泰人壽、台灣人壽、新光人壽、保誠人壽、中國人壽。南山人壽回溯自 2022 年 10 月 1 日適用。
+
+### 特別盈餘公積：不准把會計效果當成真的賺到
+
+2022 年 11 月 4 日金管會發函：壽險公司分派可分配盈餘時，要將重分類後的**淨值回升數**併計其他權益減項淨額後**提列特別盈餘公積**，不得用來分配股利。金控母公司須就子壽險的淨值回升數全額提列；採權益法持股的公開發行公司依持股比例提列。
+
+陷阱｜這個措施當時被批評是「經營不佳就改規則」。要能兩面講：
+**支持方**：重分類只是改變衡量方式，壽險公司持有債券到期的現金流完全沒變，原本就不打算賣，用市價衡量反而失真。
+**批評方**：規則在壓力發生後才改，等於事後放寬；而且是用會計方法解決資本問題，沒有真正補充資本。
+特別盈餘公積的設計正是對後者的回應——**帳面淨值可以回升，但那筆錢不准當成利潤發出去。**
+
+## 19｜接軌之後，利率問題解決了嗎
+
+部分解決，但換成另一種問題。
+
+### 解決的部分
+
+IFRS 17 下負債改用**現時利率**評價。利率上升時，資產跌、負債也跌，兩邊同向，第 16 節那種「只有一邊動」的不對稱消失了。保險局自己的說法也是：同時以公允價值衡量資產與負債，可解決現行資產負債不匹配的情形。
+
+### 沒解決、甚至新增的部分
+
+**第一，區塊錯置仍然可能發生。** 第 11 節講過：資產的公允價值變動可能進 P/L，負債的變動若採 OCI option 則進 OCI。**兩邊都動了，但動在不同地方**，損益照樣波動。所以公司必須同時管理資產分類與 OCI option 的選擇。
+
+**第二，存續期間缺口仍然存在。** 會計對齊了，不代表資產負債的利率敏感度對齊了。負債比資產長的結構沒變，ICS 的利率風險壓力情境會直接打在這個缺口上。
+
+**第三，幣別錯配變成新的焦點。** 台幣保單用美元資產支應，當台幣與美元利率變動不一致時，會產生損益波動。有報導指出這是接軌後壽險公司面臨的風險之一。
+
+**第四，淨值和資本適足率的波動度本來就會變大。** 這不是制度缺陷，是制度目的——它本來就要讓風險顯現出來。第 14 節級距放寬、第 15 節 15 年過渡措施，都是為了讓業者能在波動變大的環境下平穩過渡。
+
+面試｜「接軌之後是不是就沒問題了」的標準答法：**會計上的不對稱解決了，但經濟上的資產負債管理問題沒有消失，反而因為全部攤在陽光下而變得更迫切。** 這也正是 ALM（資產負債管理）在 2026 年之後變成壽險公司核心議題的原因——而 ALM 正好是 TAC 這份實習列出的專案類型之一。
+
+## 20｜接軌的目的：三個層次
+
+被問到「接軌的目的」時，分三層講比較完整。
+
+### 第一層：讓財報說實話
+
+舊制下，保險公司的負債用的是二十年前的利率，利潤可以在簽約當下一次認列。這兩件事加起來，財報沒辦法告訴你這家公司真正的體質。IFRS 17 把負債改成現時價值、把利潤攤到服務期間，就是要讓財報反映經濟實質。
+
+### 第二層：讓資本要求跟上
+
+財報改了，監理也要改，否則會出現「資產負債用新尺規、資本用舊尺規」的矛盾。ICS 用壓力情境法衡量風險資本，涵蓋利率、股票、不動產、長壽、脫退、費用、巨災等風險，比 RBC 的參數法更貼近真實曝險。
+
+### 第三層：國際可比與金融穩定
+
+法規｜金管會保險局新聞稿的說法是：協助保險業者穩步接軌國際制度，俾提升永續經營韌性、強化保戶權益保障，促進金融穩定發展。在說明可贖回債納入適格資產時，另提到是基於減緩業者接軌衝擊及維持債券市場穩定之目的。
+
+### 為什麼台灣晚國際三年
+
+IFRS 17 的國際生效日是 2023 年 1 月 1 日，台灣是 2026 年 1 月 1 日。依媒體報導，金管會的考量是先觀察國外實施狀況、配合我國情適度調整，並給業者較充裕的準備時間。
+
+台灣的特殊情況是**高保證利率保單的存量**：1990 年代賣出大量預定利率 6%–8% 的保單，在今天的利率環境下是沉重的長期負債。負債一改用現時利率評價，這些保單的負債現值會大幅上升。這就是台灣需要在地化與 15 年過渡措施的根本原因，也是台灣和其他市場最大的不同。
+
+面試｜如果面試官問「為什麼台灣要晚三年」，答「因為台灣有大量高保證利率保單的歷史包袱，直接接軌衝擊太大，需要時間設計在地化措施並讓業者補充資本」會比答「因為要觀察國際經驗」更有深度。
+
+## 21｜保險公司怎麼接軌：實務上做了哪些事
+
+這一題問的是「接軌要做什麼」，可以分成四條線回答。
+
+### 一、精算與系統
+
+- 建立**現金流預測模型**：IFRS 17 要求逐期重估履約現金流，需要能跑大量情境的模型（Prophet 這類精算系統就是用在這裡）
+- 建立 **CSM 計算與追蹤系統**：CSM 要依群組（group）逐期滾動，記錄攤銷、假設變動、計息
+- 決定 **coverage units 的定義**：攤銷速度直接影響每年認列多少利潤
+- 決定 **RA 的方法與信賴水準**：用 VaR 還是 TVaR、取幾個百分位
+
+### 二、會計政策的選擇
+
+- **OCI option 要不要採用**（第 10 節）
+- **資產的 IFRS 9 分類**：AC／FVOCI／FVTPL 的配置，要和負債端的選擇搭配（第 11 節）
+- **過渡方法**：完全追溯法、修正追溯法、公允價值法——選哪一個會決定接軌日的 CSM 有多大
+
+第三點影響非常大。CSM 是未來獲利的存量，接軌日 CSM 認多少，等於決定了未來幾年可以釋放多少利潤。
+
+### 三、資本
+
+- 申請 ICS 過渡措施（第 15 節，15 家壽險申請）
+- 增資、發行次順位債補充資本
+- 調整資產配置以降低風險資本
+
+### 四、商品
+
+- 停售或改版會產生虧損合約的商品（第 22 節）
+- 把銷售重心移到 CSM 貢獻高的保障型商品
+
+數字｜實際發生的例子：台灣人壽接軌時，**接軌影響淨值約 13 億元，資產重分類後影響淨值 122 億元，合計 135 億元**，淨值從 1,774 億元降至 1,639 億元，淨值比從 8.1% 降至 7.5%。可以看出資產重分類的影響（122 億）遠大於 IFRS 17 本身（13 億）。
+
+## 22｜影響哪些商品，為什麼
+
+這一題要能說出**機制**，不能只列清單。機制有三個，每個商品受影響的原因不同。
+
+### 機制一：投資成分高、保障成分低的保單，CSM 貢獻低
+
+CSM 來自「保費現值減去履約現金流現值」。如果一張保單幾乎只是把錢收進來、加計利息後還回去，中間的利潤空間很薄，CSM 就很小。更麻煩的是，IFRS 17 要求把**投資成分**（investment component，無論保險事故發生與否都要還給保戶的金額）從保險收入中剔除，所以這類保單的保險服務收入會非常難看。
+
+受影響：**躉繳儲蓄險、短年期儲蓄險**。
+
+### 機制二：高保證利率 ＝ 長期負債 ＋ 利率風險資本
+
+保證利率越高、年期越長，在現時利率評價下負債現值越大，而且對利率變動越敏感。ICS 的利率風險壓力情境會直接打在這些保單上，資本計提大幅增加。
+
+受影響：**傳統高保證利率終身壽險、長年期保證商品**。
+
+### 機制三：虧損合約測試（第 08 節）
+
+一旦某個群組被判定為虧損組合，$CSM = 0$ 且要**立即認列損失**。賣一張就要當場認一次損失，而且好消息只能慢慢進 CSM、壞消息立刻進損益。這在商業上幾乎等於不能賣。
+
+### 哪些商品反而會變多
+
+| 商品類型 | 為什麼受益 |
+|---|---|
+| 純壽險、定期壽險、健康醫療險、意外險 | 純保障、利潤率高，CSM 貢獻穩定，且不承擔長期利率風險 |
+| 投資型保單 | 投資風險由要保人承擔，資產置於分離帳戶，公司幾乎不需提列利率風險資本 |
+| 利變型商品 | 可藉宣告利率調整，降低利率風險敏感度 |
+
+數字｜2026 年上半年的實際銷售數字印證了這個方向：國泰人壽上半年新契約 CSM 539 億元，其中**健康及意外險占 59%**。六大壽險都把經營重心放在健康醫療險、高保障型與保障型美元壽險商品上。
+
+陷阱｜不要說「IFRS 17 禁止賣儲蓄險」。準則不禁止任何商品，它只是改變了**衡量與認列方式**，讓某些商品在財報和資本上變得不划算，於是公司自己選擇不賣。這個區分很重要。另外要注意：有報導稱 2026 年上半年因台股熱絡，投資型、分紅與躉繳商品反而熱賣，壓低了多數業者的 CSM 利潤率，下半年各家才把火力轉回保障型——**市場行為和制度誘因不一定同步**。
+
+## 23｜2026 年上路至今：實際數字
+
+這一節是面試最容易加分的地方。能講出具體數字，和只講概念差很多。以下為公開報導的數字，截至 2026 年第二季／上半年。
+
+### 整體獲利
+
+數字｜2026 年上半年，**20 家壽險公司全數獲利**，合計稅後純益 **2,492.3 億元**，去年同期為 177.7 億元，大增逾 13 倍。
+損益結構：**保險服務結果利益 1,082 億元**（主要受惠 CSM 穩定釋放）、**保險財務結果利益 2,121 億元**，抵銷其他營業結果損失 429 億元。
+個別：富邦人壽 559.7 億、國泰人壽 462.1 億、南山人壽 308.6 億、新光人壽 224.9 億、宏泰人壽 178 億。
+6 月底 20 家壽險合計淨值 **4 兆 1,865.9 億元**，創歷史新高。
+
+讀法：第 12 節的兩條線在這裡派上用場——**保險服務結果 1,082 億是本業，財務結果 2,121 億是投資**。投資仍是獲利主力（報導指出受惠全球股市走強、壽險業積極實現資本利得），但現在財報至少分得出來。
+
+### CSM 餘額
+
+數字｜2026 年第二季末，六大壽險 CSM 合計 **2 兆 829 億元**。
+
+| 公司 | 接軌日（2026/1/1）CSM | 2026 Q2 末 CSM | 上半年新契約 CSM |
+|---|---|---|---|
+| 國泰人壽 | 約 5,119 億 | 5,470 億 | 539 億（健康及意外險占 59%） |
+| 富邦人壽 | 約 4,032 億 | 4,289 億 | 349 億 |
+| 南山人壽 | 3,748 億 | 約 3,928 億 | 286 億 |
+| 新光人壽 | 約 2,608 億（推算） | 2,936 億 | 351 億 |
+| 凱基人壽 | 預計約 2,000 億 | 2,436 億 | 158 億 |
+| 台灣人壽 | 1,600 億 | 1,770 億 | 74 億 |
+
+（接軌日數字部分為報導推算或公司預估，南山與台壽為明確公布值。）
+
+**CSM 釋出率**：台灣人壽每年約 7%、約 112 億元；新光人壽約 7%；凱基人壽 6%–7%。
+**2026 年新契約 CSM 目標**：新光 700 億元以上；凱基每年新增 300–350 億元。
+
+面試｜釋出率是很好用的一個概念：**CSM 餘額 × 釋出率 ≈ 今年可以從 CSM 認列的利潤**。台壽 1,770 億 × 7% ≈ 124 億，這就是它保險服務結果的穩定底氣。所以媒體會說 CSM 是「獲利穩定器」。
+
+### 接軌對淨值的影響
+
+數字｜南山人壽：接軌日 CSM 3,748 億元，**調整後淨值 5,932 億元，淨值比 11.3%**。
+台灣人壽：淨值 1,774 億 → 1,639 億，淨值比 8.1% → 7.5%（接軌影響 13 億 ＋ 資產重分類 122 億）。
+富邦（2026/1/1 對母公司業主權益，較 2025 年底）：金控減少約 769 億元、富邦人壽減少約 960 億元、富邦產險增加約 57 億元，原因為接軌 IFRS 17 並進行金融資產重新指定。
+三商美邦人壽淨值增加約 247 億元；宏泰人壽增加約 8 億元。
+
+讀法：**有人增、有人減**。差異來自商品結構、資產配置、以及過渡方法的選擇。富邦減少近千億、三商美邦增加 247 億，這不是誰好誰壞，是衡量基礎改變後的重算結果。
+
+## 24｜怎麼衡量保險公司的風險：一張指標地圖
+
+這一題如果只答「看 RBC」會太單薄。分層回答比較完整。
+
+### 第一層：清償能力（資本夠不夠）
+
+| 指標 | 看什麼 | 門檻 |
+|---|---|---|
+| TW-ICS 資本適足率 | 自有資本 ÷ 風險資本（壓力情境法） | 100% 以上為資本適足（第 14 節） |
+| 淨值比 | 權益 ÷ 不含分離帳戶資產之資產總額 | 最近二期至少一期 3% 以上 |
+
+### 第二層：獲利能力與品質
+
+| 指標 | 看什麼 |
+|---|---|
+| CSM 餘額 | 未來可釋放的利潤存量 |
+| 新契約 CSM | 今年賣出的保單預期能賺多少（新業務價值） |
+| CSM 釋出率 | 利潤釋放的速度 |
+| 保險服務結果 | 本業賺不賺錢（排除投資） |
+| 保險財務結果 | 投資與利率的貢獻 |
+
+### 第三層：資產負債管理（ALM）
+
+- **存續期間缺口**：負債存續期間 − 資產存續期間，決定利率敏感度
+- **幣別錯配**：台幣負債 vs 美元資產的曝險
+- **利率風險壓力測試結果**：ICS 的利率情境下淨資產變動
+
+### 第四層：風險管理機制
+
+- 修正後第 8 條要求的**自我風險及清償能力評估機制**
+- 虧損合約比例：有多少業務在新制下是賠錢賣的
+
+面試｜回答這題時，可以用一句話收尾：**「ICS 看的是極端情境下撐不撐得住，CSM 看的是正常情境下未來賺不賺得到，兩個一起看才完整。」** 這會顯示你理解監理指標與經營指標的分工。
+
+## 25｜目前台灣接軌的狀況，與還沒解決的問題
+
+### 狀況：表面上很順利
+
+- 2026 年上半年 20 家壽險全數獲利，合計 2,492.3 億元
+- 六大壽險 CSM 合計突破 2 兆元
+- 全體壽險淨值創歷史新高
+- 15 家壽險申請並獲准適用 ICS 過渡措施
+
+接軌前業界曾有「金管會一定會讓所有壽險公司首年順利過關」的說法。從目前公開數字看，首年確實沒有出現系統性問題。
+
+### 但有幾個保留
+
+**第一，首年的好看有很大一部分來自投資。** 2026 年上半年保險財務結果 2,121 億元遠大於保險服務結果 1,082 億元，而報導指出這受惠於全球股市走強與業者積極實現資本利得。**股市好的時候看不出誰的體質差。**
+
+**第二，過渡措施是「先借用資本」。** 15 年線性遞增的新興風險過渡措施，意味著現在的資本適足率是在打折的要求下算出來的。真正的考驗是未來 15 年能不能逐年把資本補上。
+
+**第三，體質較弱的公司壓力仍在。** 2025 年上半年 21 家壽險中，三商美邦人壽 RBC 為 154.27%、淨值比 2.31%，是唯一未達舊制標準的公司，已提交資本強化計畫。中小型壽險的增資壓力並沒有因為接軌而消失。
+
+**第四，資本補充的動作持續進行。** 有報導提到富邦人壽規劃發行次順位債強化資本結構；三商壽的法說會提到玉山金兩年增資 220 億元。這些都顯示接軌不是一次性事件。
+
+**第五，商品轉型還在進行中。** 2026 年上半年因台股熱絡，投資型、分紅與躉繳商品熱賣，反而壓低了多數業者的 CSM 利潤率，下半年各家才一致把火力轉回保障型。制度誘因和市場需求之間仍有拉扯。
+
+**第六，幣別與利率錯配沒有消失。** 第 19 節講過，會計對齊不等於經濟對齊。
+
+面試｜這一題最好的結構是「**先講好消息，再講三個保留**」。只講好消息顯得沒有判斷力，只講壞消息顯得偏頗。而且一定要點出「首年獲利大部分來自投資」這個觀察——這是能看出你有沒有真的讀財報的分水嶺。
+
+## 26｜面試題庫（一）觀念題
+
+按「隱藏擬答」可以把答案收起來自我測驗。英文版刻意用短句和常見單字，目標是現場講得出來，不是漂亮。
+
+Q｜請簡單說明 IFRS 17 是什麼，為什麼要有這個準則。
+中｜IFRS 17 是 IASB 在 2017 年發布的保險合約會計準則，取代原本的 IFRS 4，台灣 2026 年 1 月 1 日上路。它要解決三個問題：第一，舊制允許保險公司在簽約當下就認列全部利潤；第二，保險負債用發單時鎖定的利率評價，和市場脫節；第三，各國做法不同，財報無法比較。IFRS 17 把保險負債拆成履約現金流現值、風險調整、契約服務邊際三塊，利潤透過 CSM 在服務期間逐期釋放。
+英｜IFRS 17 is the accounting standard for insurance contracts. It replaced IFRS 4, and Taiwan adopted it on January 1st, 2026. It fixes three problems. First, under the old rules a company could book all the profit on day one. Second, liabilities used a locked-in interest rate, so they did not reflect the market. Third, each country did it differently, so you could not compare companies. IFRS 17 splits the insurance liability into three parts: the present value of future cash flows, a risk adjustment, and the contractual service margin. Profit is released over the service period through the CSM.
+
+Q｜什麼是 CSM？為什麼它是負債？
+中｜CSM 是契約服務邊際，代表這張保單尚未實現的利潤。它是負債，因為公司還沒提供完保險服務，這筆利潤還不算賺到。初始認列時，CSM 剛好讓負債等於收到的保費，所以不會產生第一天的利得。之後隨著保險服務提供，依 coverage units 逐期釋放到損益。
+英｜CSM stands for contractual service margin. It is the unearned profit on the contract. It sits in liabilities because the company has not finished providing the service yet, so the profit is not earned. At initial recognition, the CSM makes the liability exactly equal to the premium received. That way there is no day-one gain. After that, the CSM is released into profit over time, based on coverage units.
+
+Q｜RA 和 CSM 有什麼不同？
+中｜兩個都在負債裡，也都隨服務提供而釋放，但意義不同。RA 是風險調整，衡量公司為了承擔非財務風險，例如死亡率、解約率的不確定性，所要求的補償；它隨著不確定性揭曉而釋放。CSM 是未實現利潤；它隨著服務提供而釋放。另外一個重要差別是，未來現金流估計的變動會先調整 CSM，不直接進損益，所以 CSM 有緩衝功能。
+英｜Both sit in the liability and both are released over time, but they mean different things. RA is the risk adjustment. It is the compensation the company requires for taking non-financial risk, like mortality or lapse uncertainty. It is released as the uncertainty resolves. CSM is unearned profit. It is released as service is provided. One more key difference: when the estimate of future cash flows changes, the change goes into the CSM first, not straight into profit or loss. So the CSM works as a buffer.
+
+Q｜IFRS 17 有哪三種衡量模式？分別用在哪裡？
+中｜第一是一般衡量模式 GMM，又稱建構式計量模型 BBA，是核心模型，用在長期壽險和一般保險，需要完整計算 PVFCF、RA 和 CSM。第二是保費分攤法 PAA，用在一年期以內、沒有重大融資成分的短期合約，概念接近傳統的未到期保費準備。第三是可變費用法 VFA，用在有直接參與特性的合約，例如分紅保單和投資連結保單，它的特點是 CSM 會隨標的資產池的公允價值變動而調整。
+英｜There are three. First, the General Measurement Model, also called the Building Block Approach. It is the core model, used for long-term life and general insurance. You calculate the present value of cash flows, the risk adjustment and the CSM. Second, the Premium Allocation Approach. It is a simplified model for short contracts, usually one year or less, with no significant financing component. It is close to the old unearned premium reserve. Third, the Variable Fee Approach, for contracts with direct participating features, like participating or unit-linked policies. Under VFA, the CSM moves with the fair value of the underlying assets.
+
+Q｜什麼是虧損合約？處理方式有什麼特別的地方？
+中｜如果在初始認列或後續衡量時，履約現金流的現值大於剩餘保險責任，這組合約就是虧損組合。這時 CSM 歸零，差額要立即認列為損失進損益，並形成損失成分。特別的地方是它不對稱：之後若有有利的變動，必須先沖回損失成分，全部沖完之後剩下的才可以增加 CSM。也就是壞消息立刻認列，好消息慢慢認列。
+英｜A group of contracts is onerous when the present value of the fulfilment cash flows is higher than the remaining coverage liability. When that happens, the CSM goes to zero and the shortfall is recognised as a loss in profit or loss straight away. That creates a loss component. The interesting part is that it is not symmetric. If things improve later, you must first reverse the loss component. Only after it is fully reversed can the remaining favourable change go back into the CSM. So bad news is recognised immediately, good news is recognised slowly.
+
+Q｜IFRS 17 和 IFRS 9 的關係是什麼？為什麼要一起看？
+中｜IFRS 17 管保險負債，IFRS 9 管金融資產，兩者在台灣同一天生效。保險公司的損益波動來自兩邊的互動。IFRS 9 依商業模式和 SPPI 測試把資產分成攤銷後成本、公允價值透過其他綜合損益、公允價值透過損益三類，決定資產的公允價值變動要不要進損益。IFRS 17 則有 OCI option，決定負債折現率變動要不要進損益。如果兩邊進到不同區塊，就會產生會計不匹配。最穩定的組合是資產分到攤銷後成本、負債採 OCI option。
+英｜IFRS 17 covers insurance liabilities and IFRS 9 covers financial assets. In Taiwan both took effect on the same day. The volatility in a life insurer's profit comes from how the two interact. IFRS 9 classifies assets into amortised cost, fair value through OCI, and fair value through profit or loss. That decides whether a change in the asset's fair value hits profit. IFRS 17 gives you the OCI option, which decides whether the change in the liability discount rate hits profit. If the two land in different places, you get an accounting mismatch. The most stable combination is assets at amortised cost with the OCI option on the liability side.
+
+Q｜IFRS 17 和 ICS 有什麼不同？
+中｜IFRS 17 是會計準則，回答財報怎麼編；ICS 是清償能力監理制度，回答資本夠不夠。兩者必須配套，因為 ICS 的資本計算要以 IFRS 17 的資產負債為基礎。如果只改會計不改監理，就會出現資產負債用新尺規、資本用舊尺規的矛盾，所以台灣選擇同一天接軌。
+英｜IFRS 17 is an accounting standard. It tells you how to prepare the financial statements. ICS is a solvency regime. It tells you how much capital you need. They have to move together, because the ICS capital calculation is built on the IFRS 17 balance sheet. If you changed only the accounting and not the supervision, you would measure assets and liabilities with a new ruler but capital with an old one. That is why Taiwan adopted both on the same date.
+
+## 27｜面試題庫（二）技術與計算題
+
+這一類題目通常會給你紙筆或白板。重點不是算得快，是**講清楚每一步在做什麼**。
+
+Q｜一張三年期保單，期初一次收保費 1,200 元，每年底預期給付加費用 400 元，折現率 5%，風險調整 60 元。請算出期初的 CSM 和保險負債。
+中｜先算履約現金流現值：400 除以 1.05 是 380.95，400 除以 1.05 平方是 362.81，400 除以 1.05 三次方是 345.54，合計約 1,089.30。CSM 的定義是讓初始認列不產生利得，所以保費等於三塊相加：1,200 等於 1,089.30 加 60 加 CSM，得到 CSM 等於 50.70。期初保險負債就是三者相加，等於 1,200，恰好等於收到的保費。
+英｜First, the present value of the cash flows. Four hundred over one point zero five is 380.95. Over one point zero five squared is 362.81. Over one point zero five cubed is 345.54. The total is about 1,089.30. The CSM is set so there is no day-one gain, so the premium equals the three blocks added together. Twelve hundred equals 1,089.30 plus 60 plus the CSM. So the CSM is 50.70. The opening liability is the sum of the three, which is 1,200 — exactly the premium received.
+
+Q｜承上題，假設第一年經驗與預期相同，coverage units 三年平均。第一年末的保險負債是多少？
+中｜三塊分別更新。履約現金流現值剩兩年，400 除以 1.05 加上 400 除以 1.05 平方，約 743.76。風險調整釋放三分之一，從 60 降到 40。CSM 也釋放三分之一，50.70 的三分之一約 16.90，所以剩 33.80。三者相加，第一年末保險負債約 817.56。這一年的保險服務結果就是 CSM 釋放 16.90 加上 RA 釋放 20。
+英｜We update all three blocks. The cash flows now cover two years: 400 over 1.05 plus 400 over 1.05 squared, which is about 743.76. The risk adjustment releases one third, so it goes from 60 to 40. The CSM also releases one third. One third of 50.70 is about 16.90, so 33.80 is left. Adding the three gives about 817.56. The insurance service result for the year is the 16.90 of CSM release plus the 20 of RA release.
+
+Q｜風險調整怎麼算？請舉一個簡單的例子。
+中｜概念上 RA 等於用一個風險度量衡量的履約現金流，減去它的期望值，實務上可以用 VaR 或 TVaR。簡化模型下直接用標準差乘上一個係數：RA 等於 k 乘以現金流的標準差，k 通常在 5% 到 15% 之間。例如課堂的三年期定期壽險，折現後死亡給付的標準差是 88.36，取 k 等於 10%，RA 就是 8.84。
+英｜Conceptually, the risk adjustment is a risk measure applied to the fulfilment cash flows, minus the expected value. In practice you can use VaR or TVaR. In a simple model you just take a factor times the standard deviation. RA equals k times the standard deviation of the cash flows, where k is usually between five and fifteen per cent. For example, in our class example the standard deviation of the discounted death benefit was 88.36. With k at ten per cent, the risk adjustment is 8.84.
+
+Q｜利率上升 100 個基點，假設資產債券公允價值跌 5%，IFRS 17 負債因折現率上升而減少 4%。在不同的會計選擇下，損益分別會怎樣？
+中｜分三種情境。第一，資產分類為 FVTPL、負債不採 OCI option：兩邊都進損益，損益是負 5% 加正 4%，等於負 1%，波動最大。第二，資產 FVOCI、負債採 OCI option：兩邊都進其他綜合損益，損益是零，OCI 是負 1%，損益穩定但 OCI 波動。第三，資產攤銷後成本、負債採 OCI option：資產公允價值變動不認列，負債變動進 OCI，損益是零，OCI 是負 4%，損益最穩定。
+英｜There are three cases. First, assets at fair value through profit or loss and no OCI option on the liability. Both go through profit, so the result is minus five per cent plus four per cent, which is minus one per cent. That is the most volatile. Second, assets at fair value through OCI and the OCI option on the liability. Both go to OCI. Profit is zero and OCI is minus one per cent. Profit is stable but OCI moves. Third, assets at amortised cost with the OCI option. The asset fair value change is not recognised and the liability change goes to OCI. Profit is zero and OCI is minus four per cent. That is the most stable for profit.
+
+Q｜PAA 下的剩餘保險責任怎麼算？和傳統的未到期保費準備有什麼關係？
+中｜PAA 的精神就是未到期保費準備。最簡化的情況下，尚未賺得的保費等於總保費乘以剩餘期間比例。例如一年期火險收 1,200 元、取得成本 120 元，三個月後已賺得保費 300、攤銷取得成本 30，所以剩餘保險責任的保費部分是 900，未攤銷取得成本是 90，淨負債 810。用傳統 UPR 算是 1,200 乘以九分之十二等於 900，減 90 也是 810，兩者一致。差別在於 PAA 還要做虧損合約測試，如果預期剩餘期間的索賠現值超過淨負債，就要額外認列損失。
+英｜PAA is basically the unearned premium reserve idea. In the simplest case, the unearned premium is the total premium times the share of the period remaining. Take a one-year fire policy with a premium of 1,200 and acquisition costs of 120. After three months, earned premium is 300 and amortised acquisition cost is 30. So the premium part of the remaining coverage liability is 900, the unamortised acquisition cost is 90, and the net liability is 810. Under the traditional UPR you get 1,200 times nine twelfths, which is 900, minus 90, also 810. They agree. The difference is that PAA still needs an onerous contract test. If the expected claims for the remaining period are worth more than the net liability, you recognise an extra loss.
+
+Q｜VFA 下的 CSM 會怎麼變動？請舉例。
+中｜VFA 的核心是公司對標的資產池收取一筆可變費用，這筆費用是提供服務的對價。例如保戶投入 1,000 元，約定保戶分享報酬 80%、公司 20%。會計估計時預期報酬 4%，公司可變費用是 0.2 乘以 40 等於 8。實際報酬是 10%，公司可變費用變成 0.2 乘以 100 等於 20，可變費用增加 12。假設期初 CSM 是 80，當期依 coverage units 釋放 10，則期末 CSM 等於 80 減 10 加 12 等於 82。重點是：即使已經認列了當期利潤，CSM 反而上升，因為資產池表現優於預期的部分屬於未來服務。
+英｜Under VFA the company charges a variable fee on the pool of underlying assets, and that fee is the payment for the service. Say the policyholder puts in 1,000 and the sharing is eighty per cent to the policyholder and twenty per cent to the company. If the expected return is four per cent, the expected fee is zero point two times forty, which is eight. If the actual return is ten per cent, the actual fee is zero point two times one hundred, which is twenty. So the fee is twelve higher than expected. If the opening CSM is eighty and ten is released for the service this period, the closing CSM is eighty minus ten plus twelve, which is eighty-two. The point is that even after recognising profit for the period, the CSM goes up, because the better-than-expected return relates to future service.
+
+Q｜什麼是存續期間缺口？為什麼壽險公司通常有這個問題？
+中｜存續期間缺口是負債存續期間減去資產存續期間。壽險公司賣的是二十年、三十年期的保單，負債非常長，但市場上買得到的債券通常沒有那麼長，所以資產存續期間比負債短，缺口是正的。結果是利率下降時負債現值上升得比資產多，公司受傷；利率上升時反而有利。這也是為什麼第一題提到的 2022 年升息，經濟上對壽險公司是正面的。
+英｜The duration gap is the duration of the liabilities minus the duration of the assets. Life insurers sell twenty or thirty-year policies, so the liabilities are very long. But the bonds available in the market are usually shorter. So asset duration is shorter than liability duration and the gap is positive. When rates fall, the liability value rises more than the asset value, and the company is hurt. When rates rise, it helps. That is why the 2022 rate rise was economically good for life insurers, even though the accounting looked bad.
+
+## 28｜面試題庫（三）時事與判斷題
+
+這一類沒有標準答案，面試官看的是你有沒有觀點、有沒有數字。
+
+Q｜2022 年台灣壽險業的淨值危機是怎麼發生的？
+中｜2022 年美國強勢升息，債券殖利率大幅上升、價格下跌。壽險公司的資產依 IFRS 9 用公允價值衡量，所以帳上立刻反映損失；但保險負債在 IFRS 4 下用發單時鎖定的利率評價，完全不動。資產跌、負債不動，淨值就被打掉。數字上，2022 年第一季壽險業金融資產價值比前一年底少了 2 兆 1,278 億元，首季綜合損益是負 5,328 億元，但同期稅後獲利仍有 1,091 億元。帳上在賺錢、淨值卻在崩，這個反差就是會計衡量不一致造成的。重點是，經濟實質上升息對壽險公司是有利的，因為負債存續期間比資產長。
+英｜In 2022 the Fed raised rates sharply. Bond yields jumped and bond prices fell. Life insurers measure their assets at fair value under IFRS 9, so the loss showed up immediately. But under IFRS 4, insurance liabilities were still measured at the interest rate locked in when the policy was sold, so they did not move at all. Assets fell, liabilities did not, and equity took the hit. In the first quarter of 2022, the value of the industry's financial assets fell by about 2.1 trillion NT dollars, and total comprehensive income was negative 533 billion. Yet net profit for the same quarter was still about 109 billion. Profitable on the income statement, but equity collapsing — that gap is purely an accounting mismatch. Economically, rising rates are good for life insurers, because liability duration is longer than asset duration.
+
+Q｜以前也有過升息循環，為什麼那時候沒有這個問題？
+中｜有四個原因同時成立。第一，IFRS 9 是 2018 年才在台灣上路，在那之前債券多半列為持有至到期或無活絡市場債券，以成本列帳，市價跌了帳上看不到。第二，2022 年一年內升息約 425 個基點，是 1980 年代以來最快，而且起點接近零利率，低利率環境下債券存續期間更長、對利率更敏感。第三，台灣壽險業資產規模膨脹到三十兆以上，海外美元債券曝險比二十年前大得多。第四，淨值比在 2020 年被納入資本適足性分級，帳面淨值掉下來第一次有了法律後果。簡單說，以前不是沒有損失，是看不到，而且看到了也不會怎樣。
+英｜Four things had to line up. First, IFRS 9 only came in for Taiwan in 2018. Before that, most bonds were held to maturity or classified as bonds without an active market, and carried at cost. If the market price fell, you simply did not see it on the balance sheet. Second, in 2022 rates went up about 425 basis points in one year, the fastest since the 1980s, and it started from near zero. At low yields, bond duration is longer, so the price falls more for the same rate move. Third, the Taiwanese life industry had grown to more than thirty trillion in assets, with much more exposure to US dollar bonds than twenty years ago. Fourth, the net worth ratio became part of the capital adequacy rules in 2020, so a fall in book equity had legal consequences for the first time. In short, the losses were there before. We just could not see them, and even if we had, nothing would have happened.
+
+Q｜你怎麼看金管會 2022 年允許資產重分類的措施？
+中｜要兩面看。支持的理由是，重分類只改變衡量方式，壽險公司持有債券到期的現金流完全沒變，而且原本就不打算賣，用市價衡量反而失真。批評的理由是，規則在壓力發生之後才改，等於事後放寬；而且是用會計方法處理資本問題，沒有真正補充資本。我覺得金管會同時要求提列特別盈餘公積的設計是關鍵——淨值可以回升，但那筆錢不准分配出去，這是對批評的直接回應。另外也有限制，像是分入攤銷後成本的債券每年處分不得超過 5%，防止公司拿這個當套利工具。最後共有六家壽險採用。
+英｜I think you have to see both sides. The case for it is that reclassification only changes the measurement. The cash flows from holding the bonds to maturity do not change at all, and the company never intended to sell them, so marking them to market arguably gives a misleading picture. The case against is that the rule was changed after the stress had already happened, which looks like easing the rules to fit the result, and it solves a capital problem with an accounting method rather than real capital. For me the key detail is that the regulator also required a special earnings reserve. Equity can go back up, but that amount cannot be paid out as dividends. That is a direct answer to the criticism. There were also limits, like a cap of five per cent a year on disposals of the reclassified bonds. Six life insurers used it in the end.
+
+Q｜2026 年上半年台灣壽險業的表現如何？你怎麼解讀？
+中｜表面上非常好。20 家壽險全數獲利，合計稅後純益 2,492.3 億元，比去年同期的 177.7 億元大增超過 13 倍。六大壽險的 CSM 餘額合計突破 2 兆 829 億元，全體壽險淨值 4 兆 1,865.9 億元，創歷史新高。但要看結構：保險服務結果是 1,082 億元，保險財務結果是 2,121 億元，也就是說獲利主力仍然是投資，而且受惠於全球股市走強和業者積極實現資本利得。我的解讀是，首年確實平穩過關，但股市好的時候看不出誰的體質差，真正的考驗在市場回檔的時候，以及未來 15 年能不能逐年把過渡措施打折的資本補上。
+英｜On the surface it looks very strong. All twenty life insurers were profitable, with combined net profit of about 249 billion NT dollars for the first half, up more than thirteen times from about 17.8 billion a year earlier. The six largest insurers had a combined CSM of over two trillion, and industry equity reached a record of about 4.19 trillion. But you need to look at the mix. The insurance service result was about 108 billion, while the insurance finance result was about 212 billion. So investment is still the main driver, helped by strong global equity markets and insurers realising capital gains. My reading is that the first year went smoothly, but when markets are good you cannot tell which companies are weak. The real test comes when markets turn, and whether companies can build back the capital that the transition measures are currently discounting.
+
+Q｜IFRS 17 和 ICS 上路之後，哪些保險商品受到影響？為什麼？
+中｜受衝擊的主要有三類。第一是躉繳和短年期儲蓄險，因為投資成分高、保障成分低，CSM 貢獻很薄，而且投資成分要從保險收入中剔除，財報很難看。第二是傳統高保證利率終身壽險和長年期保證商品，保證利率越高、年期越長，現時利率評價下負債現值越大，ICS 的利率風險資本計提也越重。第三是部分分紅保單，因為保證最低分紅造成資本壓力。相反地，純壽險、定期壽險、健康醫療險、意外險會變多，因為純保障的 CSM 貢獻穩定；投資型保單也會變多，因為投資風險由要保人承擔，公司幾乎不用提列利率風險資本。實際數字上，國泰人壽 2026 年上半年新契約 CSM 是 539 億元，其中健康及意外險占 59%，印證了這個方向。
+英｜Three types were hit. First, single-premium and short-term savings products. They have a large investment component and little protection, so they contribute very little CSM, and the investment component has to be stripped out of insurance revenue, which makes the income statement look poor. Second, traditional whole life products with high guaranteed rates and long-term guarantees. The higher the guarantee and the longer the term, the larger the liability under current-rate measurement, and the heavier the interest rate capital charge under ICS. Third, some participating products, because the minimum guaranteed bonus creates capital pressure. On the other side, term life, health and accident products are growing, because pure protection gives a steady CSM. Unit-linked products are also growing, because the policyholder bears the investment risk, so the company holds almost no interest rate capital. In the first half of 2026, Cathay Life's new business CSM was about 53.9 billion, and health and accident made up fifty-nine per cent of it. That confirms the direction.
+
+Q｜TW-ICS 的資本適足率門檻是多少？和 RBC 有什麼不同？
+中｜依 2025 年 12 月發布、2026 年 1 月 1 日施行的保險業資本適足性管理辦法，分四級。資本適足是資本適足率 100% 以上，且最近二期淨值比率至少一期 3% 以上。資本不足是 50% 以上未達 100%。資本顯著不足是 25% 以上未達 50%。資本嚴重不足是低於 25%，或淨值低於零。舊制 RBC 對應的門檻分別是 200%、150% 到 200%、50% 到 150%、低於 50%。要注意的是，法定最低從 200% 變成 100% 不是放鬆，因為分子分母的定義都換了，ICS 用壓力情境法計算風險資本，數值比 RBC 大得多，兩個比率不能直接比較。級距刻意放寬是因為接軌後資產負債都按現時價值衡量，資本適足率的波動會變大。
+英｜Under the regulation issued in December 2025 and effective on January 1st, 2026, there are four levels. Adequate means a ratio of one hundred per cent or more, plus a net worth ratio of at least three per cent in at least one of the last two periods. Inadequate is fifty to one hundred per cent. Significantly inadequate is twenty-five to fifty per cent. Seriously inadequate is below twenty-five per cent, or negative equity. Under the old RBC regime the thresholds were two hundred, one fifty to two hundred, fifty to one fifty, and below fifty. One thing to be careful about: the minimum moving from two hundred to one hundred is not a relaxation. Both the numerator and the denominator changed. ICS uses stress scenarios to calculate required capital, so the number is much larger than under RBC. The two ratios are not comparable. The bands were widened on purpose, because measuring both sides at current value makes the ratio more volatile.
+
+Q｜金管會給了哪些過渡措施？為什麼需要？
+中｜分階段公布。2023 年 7 月是市場風險中股票、不動產、公共建設的在地化及過渡措施；2023 年 11 月是利率風險及淨資產過渡措施；2024 年 4 月的第三階段把可贖回債納入適格資產，並訂定新興風險的 15 年過渡措施，針對長壽、脫退、費用、巨災等風險，資本要求從 0% 線性遞增到 100%。截至 2025 年 11 月，共 15 家壽險申請，據報導全是本土壽險，多數申請利率風險、新興風險和淨資產三項。需要過渡措施的根本原因是台灣有大量 1990 年代賣出的高保證利率保單，負債一改用現時利率評價，負債現值會大幅上升，直接接軌會讓很多公司不合格。另外還有差異化管理措施，依增資和新契約 CSM 的努力給予投資限額和風險係數的獎勵，把監理誘因和商品策略綁在一起。
+英｜They came in stages. In July 2023 there were localisation and transition measures for market risk, covering equity, real estate and public infrastructure. In November 2023 came the interest rate risk and net asset transition measures. In April 2024 the third stage added callable bonds as eligible assets and set a fifteen-year transition for emerging risks — longevity, lapse, expense and catastrophe — where the capital requirement rises linearly from zero to one hundred per cent. As of November 2025, fifteen life insurers had applied, reportedly all domestic, and most applied for three items: interest rate risk, emerging risk and net assets. The underlying reason is that Taiwan sold a large volume of high guaranteed rate policies in the 1990s. Once liabilities are measured at current rates, their present value rises sharply, and a direct switch would leave many companies below the standard. There are also differentiated management measures, which reward companies for capital increases and new business CSM with higher investment limits and lower risk factors. That ties the supervisory incentive directly to product strategy.
+
+Q｜接軌之後，利率造成的問題解決了嗎？
+中｜部分解決。IFRS 17 下負債改用現時利率評價，利率上升時資產跌、負債也跌，2022 年那種只有一邊動的不對稱消失了。但有三件事沒解決。第一，區塊錯置：資產的公允價值變動可能進損益，負債若採 OCI option 則進其他綜合損益，兩邊都動但動在不同地方，損益照樣波動。第二，存續期間缺口還在，會計對齊不代表利率敏感度對齊，ICS 的利率風險壓力情境會直接打在這個缺口上。第三，幣別錯配變成新焦點，台幣保單用美元資產支應，兩邊利率變動不一致就會產生損益波動。所以會計上的不對稱解決了，但資產負債管理的問題反而因為全部攤在陽光下而更迫切。
+英｜Partly. Under IFRS 17 the liability is measured at current rates, so when rates rise both assets and liabilities fall. The one-sided mismatch of 2022 is gone. But three things remain. First, the blocks can still be misaligned. The asset fair value change may go to profit while the liability change goes to OCI under the OCI option. Both move, but in different places, so profit still swings. Second, the duration gap is still there. Aligning the accounting does not align the interest rate sensitivity, and the ICS interest rate stress hits that gap directly. Third, currency mismatch is the new focus. Taiwan dollar policies are backed by US dollar assets, so when the two rate curves move differently, you get volatility. So the accounting mismatch is solved, but asset liability management has become more urgent, not less, because everything is now visible.
+
+## 29｜面試題庫（四）行為題與動機題
+
+這一類題目要**先準備好自己的材料**。下面的擬答是結構示範，裡面的內容要換成你自己的經歷。
+
+Q｜為什麼想做精算顧問？為什麼是 TAC？
+中｜我想做顧問而不是單一公司的內部精算，是因為顧問可以在短時間內接觸到多家公司的做法。IFRS 17 和 ICS 剛上路，每家公司在 CSM 計算、coverage units 定義、OCI option 的選擇上都不一樣，在顧問端可以看到這些差異，學習速度比待在一家公司快很多。TAC 吸引我的地方有三點：第一，業務橫跨亞太區，可以看到不同監理制度的比較；第二，職缺列出的專案類型涵蓋確定性與隨機性模型、ALM、資本預測、商品定價和 IFRS 17 財務報導，這幾塊正好是我想補的實務經驗；第三，團隊有九十位以上的精算與財務專業人員，對實習生來說有人可以問很重要。
+英｜I want to work on the consulting side rather than in-house because consulting lets me see how many different companies do the same thing. IFRS 17 and ICS have just come into force, and every company has made different choices on CSM calculation, coverage units and the OCI option. On the consulting side I get to see those differences, so I learn much faster. Three things attract me to TAC. First, the work covers the whole Asia Pacific region, so I can compare different regulatory regimes. Second, the project types in the posting — deterministic and stochastic modelling, ALM, capital projection, product pricing and IFRS 17 reporting — are exactly the practical experience I am missing. Third, the team has more than ninety actuarial and finance professionals, and for an intern, having people to ask is very important.
+
+Q｜你修過哪些相關課程？有什麼技術能力？
+中｜我在政大雙主修風險管理與保險、統計，輔系經濟和財務。和這份工作最相關的是精算數學，我們這學期的補充講義就在做 IFRS 17 的保險負債計算，包括 GMM 下的 PVFCF、RA、CSM 和 LRC，也做過 PAA 和 VFA 的試算，以及 IFRS 9 三種資產分類對損益的影響。另外風險管理這門課讓我熟悉 VaR、條件尾端平均、隨機優越這些風險度量，這和 IFRS 17 的風險調整用 VaR 或 TVaR 是同一套工具。工具方面我熟 Excel，也用 Python 和 R 做過資料處理與統計分析。Prophet 我還沒碰過，但我知道它是跑精算模型的系統，如果有機會我會很想學。
+英｜I am at NCCU, double majoring in Risk Management and Insurance and in Statistics, with minors in Economics and Finance. The most relevant course is Actuarial Mathematics. This semester our supplementary notes covered IFRS 17 liability calculations directly — the present value of cash flows, the risk adjustment, the CSM and the remaining coverage liability under GMM, plus worked examples for PAA and VFA, and how the three IFRS 9 asset classifications affect profit. My Risk Management course also covered VaR, conditional tail mean and stochastic dominance, which is the same toolkit that IFRS 17 uses for the risk adjustment. On tools, I am comfortable with Excel, and I have used Python and R for data work and statistical analysis. I have not used Prophet yet, but I know it is the system used to run actuarial models, and I would like to learn it.
+
+Q｜你覺得這份實習最困難的地方會是什麼？
+中｜我想是從學校的簡化模型跳到真實資料。課堂上的範例是三年期、現金流乾淨、折現率固定；實務上要處理幾十萬張保單、分群組、每期重估假設，而且資料本身會有缺漏和不一致。我預期一開始會花很多時間在資料整理和驗算，而不是在精算理論。我覺得這是合理的，而且我願意把基本功做扎實。另外一個是溝通，顧問的產出最後要讓客戶看懂，我需要練習把技術結果講成客戶的語言。
+英｜I think the hardest part will be moving from simplified classroom models to real data. In class the examples are three-year contracts with clean cash flows and a fixed discount rate. In practice you deal with hundreds of thousands of policies, grouping, and reassessing assumptions every period, and the data itself has gaps and inconsistencies. I expect to spend a lot of time at first on data cleaning and checking rather than on actuarial theory. I think that is reasonable, and I am willing to do that groundwork properly. The other challenge is communication. Consulting output has to make sense to the client, so I need to practise explaining technical results in the client's language.
+
+Q｜研究所面試：為什麼想讀精算組？你的研究方向是什麼？
+中｜這一題一定要有自己的答案，下面只是一個結構示範。先講一個具體的起點，不要從興趣講起。例如：我在風險管理課讀 Aumann–Serrano 和 Foster–Hart 的風險指標時，發現它們問的是同一件事的兩面——要多不怕風險才肯接受，和要多有家底才敢承擔。這讓我對風險的量化很有興趣。接著連到 IFRS 17：風險調整這一塊其實就是在問同樣的問題，公司要為非財務風險的不確定性要求多少補償，而實務上用 VaR 或 TVaR。我想研究的方向是，不同風險度量的選擇對 CSM 和保險服務結果的影響有多大，以及在台灣高保證利率保單的存量下，這個選擇對資本適足率的敏感度。最後講為什麼是這裡：精算組的課程和老師在 IFRS 17 與清償能力這塊有累積，資料和實務連結也強。
+英｜You need your own answer here. Start from something concrete, not from interest in general. For example: in my Risk Management course I studied the Aumann–Serrano and Foster–Hart measures of riskiness, and I realised they ask two sides of the same question — how risk tolerant you must be to accept a gamble, and how wealthy you must be to bear it. That got me interested in quantifying risk. It connects directly to IFRS 17, because the risk adjustment asks the same question: how much compensation does the company require for non-financial uncertainty, and in practice you use VaR or TVaR. The direction I want to research is how much the choice of risk measure changes the CSM and the insurance service result, and how sensitive the capital adequacy ratio is to that choice, given Taiwan's large stock of high guaranteed rate policies. Then say why here: the actuarial track has depth in IFRS 17 and solvency, and strong links to practice.
+
+面試｜行為題的通則：**具體 ＞ 抽象**。講「我對風險管理有興趣」沒有用，講「我讀到某篇論文、發現某個問題」才有用。另外準備一個你**做錯過、後來怎麼修正**的例子，幾乎每場面試都會問到，而且這題最能看出一個人會不會進步。
+
+## 30｜英文速查：關鍵詞彙與句型
+
+面試用英文最怕的不是不會，是當下想不起來那個字。這一節把最常用的整理起來。
+
+### 核心詞彙
+
+| 中文 | English | 讀法提示 |
+|---|---|---|
+| 保險合約 | insurance contract | |
+| 履約現金流 | fulfilment cash flows | 英式拼 fulfilment，美式 fulfillment |
+| 未來現金流量現值 | present value of future cash flows | |
+| 風險調整 | risk adjustment | 全名 risk adjustment for non-financial risk |
+| 契約服務邊際 | contractual service margin (CSM) | |
+| 保障單位 | coverage units | 決定 CSM 攤銷速度 |
+| 剩餘保障負債 | liability for remaining coverage (LRC) | |
+| 已發生理賠負債 | liability for incurred claims (LIC) | |
+| 虧損合約 | onerous contract | 唸 /ˈɒnərəs/ |
+| 損失成分 | loss component | |
+| 一般衡量模式 | general measurement model (GMM) | |
+| 建構式計量模型 | building block approach (BBA) | |
+| 保費分攤法 | premium allocation approach (PAA) | |
+| 可變費用法 | variable fee approach (VFA) | |
+| 直接參與特性 | direct participating features | |
+| 標的項目 | underlying items | |
+| 投資成分 | investment component | |
+| 折現率 | discount rate | |
+| 鎖定利率 | locked-in rate | |
+| 現時利率 | current rate | |
+| 其他綜合損益 | other comprehensive income (OCI) | |
+| 攤銷後成本 | amortised cost (AC) | |
+| 公允價值透過損益 | fair value through profit or loss (FVTPL) | |
+| 公允價值透過其他綜合損益 | fair value through OCI (FVOCI) | |
+| 會計不匹配 | accounting mismatch | |
+| 保險服務結果 | insurance service result | |
+| 保險財務結果 | insurance finance result | |
+| 清償能力 | solvency | |
+| 保險資本標準 | Insurance Capital Standard (ICS) | |
+| 風險基礎資本 | risk-based capital (RBC) | |
+| 資本適足率 | capital adequacy ratio | |
+| 淨值比 | net worth ratio | |
+| 壓力情境法 | stress scenario approach | |
+| 存續期間缺口 | duration gap | |
+| 資產負債管理 | asset liability management (ALM) | |
+| 過渡措施 | transition measures | |
+| 在地化 | localisation | |
+| 增資 | capital injection／capital increase | |
+| 次順位債 | subordinated debt | |
+| 特別盈餘公積 | special earnings reserve | |
+| 重分類 | reclassification | |
+| 主管機關 | the regulator／the FSC | 金管會可說 the Financial Supervisory Commission |
+
+### 可以直接套用的句型
+
+**開場定義**
+- `A is basically ...` ——「A 基本上就是……」最自然的口語定義開場。
+- `The simplest way to put it is ...` ——「最簡單的講法是……」
+- `There are three parts to it. First ... Second ... Third ...` ——結構化回答，面試官最喜歡。
+
+**解釋機制**
+- `The reason is that ...` ——「原因是……」
+- `What happens is ...` ——「實際發生的是……」
+- `That is why ...` ——「這就是為什麼……」
+- `A moves, but B does not. That is the mismatch.` ——講不對稱時很好用。
+
+**給數字**
+- `In the first half of 2026, the figure was about ...` ——加 about 就不會被數字細節卡住。
+- `Roughly speaking, ...` ——「大致上來說」
+- `If I remember correctly, it was around ...` ——不確定時的安全講法，比硬講錯好。
+
+**表達判斷**
+- `I think you have to see both sides.` ——「我覺得要兩面看。」展現判斷力。
+- `On the surface it looks ... but if you look at the mix, ...` ——「表面上看起來……但看結構的話……」
+- `My reading is that ...` ——「我的解讀是……」
+- `The real test will be ...` ——「真正的考驗會是……」
+
+**不知道的時候**
+- `I am not sure about the exact number, but the direction is ...` ——不知道數字但知道方向。
+- `I have not worked with that, but my understanding is ...` ——誠實但不空白。
+- `That is a good question. Let me think about it for a second.` ——爭取思考時間，完全可以用。
+
+面試｜講英文時，**短句勝過長句**。不要試著把中文的長句直譯過去，會在子句裡卡住。一個想法一句話，講完停一下再講下一句。面試官在意的是你講不講得清楚，不是你的句子有多複雜。
+
+## 31｜來源清單
+
+本筆記的數字與法規依據。課堂講義部分為上課教材，其餘為公開資料，連結列於下方以便查證。
+
+### 課堂教材
+
+- 精算數學第 4 章補充講義，張士傑教授，政治大學風險管理與保險學系，2025/11/6（IFRS 4 與 IFRS 17 比較、CSM／RA／LRC 數學表達、三年期與四年期保單範例）
+- 精算數學第 5 章補充講義，張士傑教授，2025/11/27（GMM／PAA／VFA 三種衡量模式、試算範例、IFRS 9 三分類與損益不匹配分析）
+- 產險數學與產險精算實務：IFRS 17 簡介，魏長賢（FCAS），安侯企業管理股份有限公司，2019（合約範圍、認列與除列、合約組成層級、虧損性合約、GMM 與 PAA 深度解說）
+
+### 法規與官方資料
+
+- [金管會保險局：修正「保險業資本適足性管理辦法」（2025/12/24，金管保財字第 11404948751 號）](https://www.ib.gov.tw/ch/home.jsp?id=43&parentpath=0%2C3&mcustomize=onemessages_view.jsp&dataserno=202512240001&dtable=Law)——第 14 節四級門檻、淨值比定義、第 8 條自我風險評估
+- [金管會保險局：預告「保險業資本適足性管理辦法」修正草案（2025/9/16）](https://www.ib.gov.tw/ch/home.jsp?id=239&parentpath=0%2C2%2C238&mcustomize=news_view.jsp&dataserno=202509160001&toolsflag=Y&dtable=News)——級距放寬的理由
+- [金管會保險局：TW-ICS 第三階段在地化及過渡性措施，及差異化管理措施（2024/4/16）](https://www.ib.gov.tw/ch/home.jsp?id=239&parentpath=0%2C2%2C238&mcustomize=news_view.jsp&dataserno=202404160001&toolsflag=Y&dtable=News)——15 年新興風險過渡、可贖回債、差異化管理的投資限額與風險係數
+
+### 新聞報導
+
+- [經濟日報：金管會 ICS 過渡措施 15 家本土壽險遞件申請（2025/11/11）](https://money.udn.com/money/story/5613/9132875)
+- [NOWnews：金管會公布 ICS 過渡措施 保險業 11/7 前申請（2025/10/16）](https://news.pchome.com.tw/finance/nownews/20251016/index-76061867103872207003.html)——七大原則、基準上限 125%
+- [現代保險：資本適足率新制明年元旦上路 21 家壽險能否全數過關（2025/9/18）](https://www.rmim.com.tw/news-detail-43457)——三商美邦 RBC 154.27%、淨值比 2.31%
+- [工商時報：壽險獲利有底氣 上半年六大業者 CSM 餘額衝破 2 兆（2026/9/4）](https://www.ctee.com.tw/news/20260904700043-430305)
+- [聯合新聞網：壽險財報出爐 上半年海賺 2,492 億元 20 家全數獲利（2026/8/31）](https://udn.com/news/story/7252/9725773)
+- [經濟日報：南山人壽股東會 接軌日 CSM 餘額達 3,748 億元（2026/6/23）](https://money.udn.com/money/story/11162/9582311)
+- [工商時報：大型壽險獲利關鍵指標大車拼 2026 起獲利底氣要看「它」（2026/3/12）](https://www.ctee.com.tw/news/20260312701931-430305)——各家接軌日 CSM、釋出率、台壽與富邦淨值變動
+- [經濟日報：同樣推保障型保單 為什麼六大壽險上半年 CSM 累積不同調（2026/10/29）](https://money.udn.com/money/story/122377/9845565)
+- [中時：史上最慘 壽險 Q1 身家少逾 2.1 兆（2022/5/14）](https://www.chinatimes.com/realtimenews/20220514000121-261502)
+- [工商時報：升息害壽險淨值縮水？金管會出聲了（2022/7/21）](https://www.ctee.com.tw/news/20220721700730-430301)——保險局三大說明
+- [工商時報：金管會公布 資產重分類過關 壽險淨值危機解除（2022/10/12）](https://www.ctee.com.tw/news/20221012701178-439901)——重分類條件、南山回溯適用
+- [中央社：防止資產重分類灌水配息 金管會祭提撥特別公積條款（2022/11/4）](https://www.cna.com.tw/news/afe/202211040362.aspx)——六家名單、金控全額提列
+
+陷阱｜引用數字時要留意三件事：第一，2026 年的數字多為上半年或第二季末，面試時說清楚期間；第二，部分接軌日 CSM 是報導推算或公司預估，不是查核數；第三，不同報導對同一項目偶有出入，例如六大壽險上半年新契約 CSM，各家相加與報導彙總數有約 15 億元的差異。講「大約」比講到小數點安全。
