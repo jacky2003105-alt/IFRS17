@@ -17,10 +17,16 @@ OUT = SRC.parent / "index.html"
 
 MATH_RE = re.compile(r"\$([^$\n]+)\$")
 
+# KaTeX 的數學模式不處理中文：直接寫中文會變成一串斜體、字距全錯。
+# 把算式裡連續的中文（含全形標點）自動包成 \text{...}，
+# 這樣 notes.md 裡可以照常寫「$保險負債 = PVFCF + RA + CSM$」。
+CJK_RE = re.compile(r"[㐀-鿿豈-﫿，。、：；（）「」【】？！·]+")
 
-def mathify(s):
-    """$...$ 用一個等寬襯線樣式呈現；沒有外部套件，離線可讀。"""
-    return MATH_RE.sub(lambda m: '<span class="m">' + m.group(1) + "</span>", s)
+
+def cjk_to_text(tex):
+    if "\\text{" in tex:          # 已經自己包好的就不要動
+        return tex
+    return CJK_RE.sub(lambda m: r"\text{" + m.group(0) + "}", tex)
 
 
 def inline(s):
@@ -29,7 +35,7 @@ def inline(s):
     tokens = []
 
     def stash(m):
-        tokens.append('<span class="m">' + m.group(1) + "</span>")
+        tokens.append("$" + cjk_to_text(m.group(1)) + "$")
         return f"@@T{len(tokens)-1}@@"
 
     s = MATH_RE.sub(stash, s)
@@ -75,6 +81,11 @@ def render(body):
 
         if block.startswith("### "):
             chunks.append("<h3>" + inline(block[4:]) + "</h3>")
+
+        elif MATH_RE.fullmatch(block):
+            # 整段就是一條算式 -> 置中獨立顯示
+            tex = cjk_to_text(html.escape(MATH_RE.fullmatch(block).group(1)))
+            chunks.append('<div class="math">\\[' + tex + "\\]</div>")
 
         elif block.startswith("Q｜"):
             # 面試題：題目 + 中文擬答 + 英文擬答
@@ -179,8 +190,15 @@ li{margin:6px 0}
 strong{font-weight:650}
 p strong{background:linear-gradient(transparent 64%,#dbe9f5 64%)}
 code{background:#eef2f6;border-radius:4px;padding:1px 5px;font-size:.9em}
-.m{font-family:"Latin Modern Math","Cambria Math",Georgia,serif;font-style:italic;
- background:#f6f8fa;border-radius:4px;padding:1px 5px;font-size:1.02em;white-space:nowrap}
+.math{margin:18px 0;padding:6px 0;overflow-x:auto;overflow-y:hidden}
+.katex{font-size:1.06em;position:relative}
+.katex-display{margin:.5em 0}
+/* KaTeX 的隱藏 MathML 是 position:absolute，若 .katex 本身沒有定位，
+   它的包含區塊會跑到頁面層級，.unit 的 overflow:hidden 就剪不到它，
+   結果在手機上撐出一條水平捲軸。給 .katex 加 position:relative 才治本。*/
+.katex .katex-mathml{position:absolute!important;width:1px;height:1px;
+ overflow:hidden!important;clip-path:inset(50%);white-space:nowrap}
+.katex-error{color:#b4532a;background:#fdf2f0;padding:1px 5px;border-radius:4px}
 .table-wrap{overflow-x:auto;margin:20px 0}
 table{border-collapse:collapse;width:100%;font-size:15.5px;line-height:1.75}
 th,td{border-bottom:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
@@ -226,6 +244,10 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:26px}
 """
 
 JS = """
+renderMathInElement(document.body,{
+ delimiters:[{left:'\\\\[',right:'\\\\]',display:true},{left:'$',right:'$',display:false}],
+ throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code','option']
+});
 document.getElementById('jump').onchange=function(){if(this.value)location.hash=this.value};
 (function(){
  var hideA=false, hideE=false;
@@ -242,6 +264,7 @@ doc = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
 <style>{CSS}</style>
 <header>
 <div class="eyebrow">精算實習 ＋ 研究所面試準備</div>
@@ -258,6 +281,8 @@ doc = f"""<!doctype html>
 {arts}
 </main>
 <footer>依公開資料與課堂講義整理；數字與法規以原始來源為準。</footer>
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
 <script>{JS}</script>
 </html>
 """
