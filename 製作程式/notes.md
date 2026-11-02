@@ -527,6 +527,36 @@ $\text{折現率變動造成的負債變動} \to \begin{cases} \text{OCI} & \tex
 
 （VFA 另有一個風險抵減選項，可以把部分財務風險的變動認列於損益而不調整 CSM，這是損益處理，不是 OCI 選項。）
 
+### 為什麼 GMM 下利率不該碰 CSM
+
+上面是規則，這一段是**為什麼**。面試能答出理由，比背規則強得多。
+
+**理由一：CSM 的定義決定了什麼有資格動它。**
+
+CSM 是「提供**保險服務**」的未賺得利潤。所以只有會改變「未來服務的內容，或服務的對價」的事情，才該調整它。問題就變成：**利率變動，有沒有改變公司提供的服務、或公司收的對價？**
+
+**GMM 的合約：保戶拿的錢是講定的。** 利率上升，公司欠保戶的名目金額一毛也沒變，變的只是那筆固定義務的**現值**。換句話說，變動的是「我手上這筆錢值多少」，不是「我提供的服務值多少」。那是投資與資產負債管理的結果，不是承保服務的結果——所以它歸**保險財務損益**，而不該混進 CSM。
+
+**VFA 的合約：公司收的費用本身就隨市場浮動。** VFA 的適用前提就是公司實質上收取「標的資產報酬的一個比例」作為服務的對價。市場一動，**對價就真的變了**。對價變了，未賺得的服務利潤當然要跟著變，所以調整 CSM 才正確。這就是「**可變**費用」這個名字的由來。
+
+**理由二：不這樣做，資產負債管理的故事會講不出來。**
+
+OCI option 的用意是讓負債端的利率效果，能和資產端的利率效果在同一個區塊裡對齊、互相抵銷（第 13 節）。這件事只有在**負債的利率效果全部集中在保險財務損益**時才成立。
+
+如果在 GMM 下讓利率變動被吸進 CSM，會發生兩件壞事：第一，保險財務損益不完整，資產與負債的對照就破了；第二，一筆純粹的投資損益會被遞延，然後以**保險收入**的形式分二十年吐出來——那等於把投資績效偽裝成本業收入，正好違背 IFRS 17 把「保險服務結果」和「保險財務結果」分開的初衷（第 14 節）。
+
+**理由三：放回第 10 節的三分類，邏輯完全一致。**
+
+| 變動的性質 | 它改變了什麼 | 處理 |
+|---|---|---|
+| 非財務假設（死亡率、脫退率、費用率） | **未來服務的內容**變了 | 調整 CSM |
+| 已提供服務的經驗差異 | 那段服務已經結束了，沒有未來可以調 | 認列當期損益 |
+| 金融假設（折現率） | 服務沒變、對價也沒變，只有現值變了 | 保險財務損益 |
+
+**VFA 是唯一的例外，而它不是破例，是因為對那類合約而言，金融變數本來就是服務對價的一部分。**
+
+面試｜一句話版本：**GMM 下利率變動改變的是「錢值多少」，VFA 下改變的是「我收多少費用」。前者是財務結果，後者是服務的對價，所以只有後者該調 CSM。**
+
 面試｜如果面試官問「CSM 會不會受利率影響」，最漂亮的答法是**先反問或先分模型**：「在 GMM 下，CSM 以鎖定利率計息，當期利率變動不調整 CSM，而是進保險財務損益；但在 VFA 下，CSM 會隨可變費用變動而調整，而可變費用包含部分折現率的變動，所以利率確實會流進 CSM。」
 
 陷阱｜一個誠實的邊界：採用 OCI option 時，進入淨利的金額是一個「系統性分攤」的結果，而不是把各項利息單純相加。我查到的 IASB 支援文件確認了「CSM 在 GMM 下用鎖定利率計息」與「OCI 可分拆的是金融假設變動的效果」，但**沒有**查到系統性分攤的完整計算規定，所以上面的表是概念上的分工，實際金額要看準則本文與公司的會計政策。
@@ -1414,6 +1444,10 @@ Q｜VFA 下的 CSM 會怎麼變動？請舉例。
 Q｜CSM 會不會隨利率變動？它會計息嗎？
 中｜要先分模型。在一般模型 GMM 下，CSM 確實會計息，但用的是初始認列時決定的折現率，也就是鎖定利率，所以那筆利息金額是發單時就固定的，不會隨市場利率起伏。這筆利息屬於保險財務費用，會進淨利。至於當期的折現率變動，在 GMM 下原則上不調整 CSM，而是整筆反映在保險財務損益，若採用 OCI option 則部分進其他綜合損益。但在可變費用法 VFA 下就不一樣，CSM 會隨可變費用的變動調整，而可變費用的變動包含部分折現率與其他財務變數的變動，所以利率確實會流進 CSM；而且 VFA 下沒有明確的 CSM 利息增生，利息是隱含在可變費用變動裡的。另外要注意 CSM 有兩種出場方式不要搞混：依保障單位攤銷的部分進保險收入，屬於保險服務結果；利息增生的部分進保險財務費用，屬於保險財務結果。
 英｜It depends on the model. Under the general model, the CSM does accrete interest, but at the discount rate determined at initial recognition, the locked-in rate. So the amount is fixed when the contract is written and does not move with market rates. That interest is an insurance finance expense and goes to profit or loss. Changes in the current discount rate do not adjust the CSM under the general model. They go to the insurance finance result, and partly to OCI if the company uses the OCI option. Under the variable fee approach it is different. The CSM is adjusted for changes in the variable fee, and those changes include some changes in discount rates and other financial variables, so interest rates do flow into the CSM. Also, under VFA there is no explicit interest accretion on the CSM; the interest is implicit in the change in the variable fee. One more thing worth separating: the CSM leaves the balance sheet in two different ways. The part released for service goes into insurance revenue, in the insurance service result. The interest accretion goes into insurance finance expense, in the insurance finance result.
+
+Q｜為什麼 GMM 下利率變動不調整 CSM，VFA 下卻會？
+中｜關鍵在兩種合約的對價結構不一樣。CSM 是提供保險服務的未賺得利潤，所以只有改變未來服務內容或服務對價的事情才該動它。GMM 的合約，保戶拿到的金額是講定的，利率上升並不改變公司欠保戶的名目義務，只改變那筆固定義務的現值，變的是錢值多少而不是服務值多少，那是投資與資產負債管理的結果，所以歸保險財務損益。VFA 的合約不一樣，公司實質上收取的是標的資產報酬的一個比例作為服務對價，市場一動對價就真的變了，對價變了未賺得的服務利潤當然要跟著變，所以調整 CSM 才正確，這也是可變費用這個名字的由來。還有第二個理由：OCI option 的用意是讓負債端和資產端的利率效果在同一個區塊對齊抵銷，這只有在負債的利率效果全部集中在保險財務損益時才成立；如果讓利率變動被吸進 CSM，一筆純粹的投資損益會被遞延、再以保險收入的形式分二十年吐出來，那等於把投資績效偽裝成本業收入。
+英｜The key is that the two types of contract have different consideration structures. The CSM is unearned profit from providing insurance service, so only something that changes future service, or the price of that service, should move it. Under the general model the policyholder gets a defined amount. A rise in interest rates does not change what the company owes in nominal terms. It only changes the present value of that fixed obligation. So what changed is what the money is worth, not what the service is worth. That is an investment and ALM outcome, so it belongs in the insurance finance result. Under the variable fee approach it is different. The company is effectively charging a share of the return on the underlying items as the price of its service. When the market moves, the fee itself genuinely changes. If the consideration changes, the unearned service profit has to change too, so adjusting the CSM is the right answer. That is why it is called a variable fee. There is a second reason. The point of the OCI option is to line up the rate effects on the liability with the rate effects on the assets in the same place. That only works if all the rate effects on the liability sit in the insurance finance result. If rate movements were absorbed into the CSM, a pure investment gain or loss would be deferred and then released as insurance revenue over twenty years, which would dress up investment performance as core underwriting income.
 
 Q｜折現率上升，BEL 和 CSM 分別會怎麼變？
 中｜BEL 是未來淨現金流量的折現現值，折現率上升，現值下降，所以 BEL 下降。CSM 的方向相反。從初始認列的定義看，CSM 等於保費減掉履約現金流現值再減掉風險調整，折現率上升使履約現金流現值變小，扣掉的東西變少，剩下的利潤就變多，所以 CSM 上升。不過要補一句：這是初始認列時的效果。後續期間在 GMM 下，折現率變動原則上不調整 CSM，而是列入保險財務損益，或在採用 OCI option 時列入其他綜合損益。
